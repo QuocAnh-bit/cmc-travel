@@ -31,7 +31,7 @@ class RoomController extends Controller
             ]
         ];
 
-        return view('clients.rooms.index', compact('rooms'));
+        
     }
 
     /**
