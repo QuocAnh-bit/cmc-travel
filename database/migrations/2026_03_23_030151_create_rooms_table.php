@@ -12,9 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('rooms', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+    $table->id();
+    $table->string('name');
+    $table->integer('price');
+    $table->string('image')->nullable();
+    $table->text('description')->nullable();
+    $table->boolean('status')->default(1);
+    $table->timestamps();
+});
     }
 
     /**
