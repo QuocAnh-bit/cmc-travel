@@ -1,18 +1,38 @@
 @extends('layouts.auth')
 
+@section('title', 'Login')
+
 @section('content')
-<div class="container mt-5" style="max-width:400px">
-    <h3>Đăng nhập</h3>
+<div class="login-wrapper">
 
-    @session('error')
-        <div class="alert alert-danger">{{ session('error') }}</div>
-    @endsession
+    <div class="login-left">
+        <div class="brand-content">
+            <h1>CMC Travel</h1>
+            <p>Đặt phòng nhanh chóng, tiện lợi</p>
+        </div>
+    </div>
 
-    <form method="POST" action="/login">
-        @csrf
-        <input name="email" class="form-control mb-2" placeholder="Email">
-        <input type="password" name="password" class="form-control mb-2" placeholder="Mật khẩu">
-        <button class="btn btn-primary w-100">Đăng nhập</button>
-    </form>
+    <div class="login-right">
+        <div class="login-box">
+            <h3>Login</h3>
+
+            @if(session('error'))
+                <div class="alert alert-danger">{{ session('error') }}</div>
+            @endif
+
+            <form method="POST" action="{{ route('login.post') }}">
+                @csrf
+                <input type="email" name="email" class="form-control mb-3" placeholder="Email" value="{{ old('email') }}">
+                <input type="password" name="password" class="form-control mb-3" placeholder="Mật khẩu">
+                <button type="submit" class="btn btn-primary mt-2">Đăng nhập</button>
+            </form>
+
+            <div class="register-link mt-4 text-center">
+                <span>Chưa có tài khoản?</span>
+                <a href="{{ route('register') }}">Đăng ký</a>
+            </div>
+        </div>
+    </div>
+
 </div>
 @endsection

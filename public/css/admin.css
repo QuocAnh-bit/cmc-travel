@@ -1,0 +1,123 @@
+/* Biến màu sắc chủ đạo */
+:root {
+    --sidebar-bg: #222e3c;
+    --primary-color: #4e73df;
+    --bg-light: #f4f7f6;
+    --text-muted: rgba(255, 255, 255, 0.6);
+    --transition: all 0.3s ease;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-light);
+    margin: 0;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    background: var(--sidebar-bg);
+    position: fixed;
+    left: 0;
+    top: 0;
+    transition: var(--transition);
+    z-index: 1000;
+}
+
+.sidebar-header {
+    padding: 25px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.sidebar-header h4 {
+    color: #fff;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: 1px;
+}
+
+.nav-admin {
+    padding: 20px 0;
+    list-style: none;
+    margin: 0;
+}
+
+.nav-admin li {
+    padding: 2px 15px;
+}
+
+.nav-admin a {
+    color: var(--text-muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.nav-admin a i {
+    width: 25px;
+    font-size: 1.1rem;
+    margin-right: 10px;
+}
+
+/* Hiệu ứng Hover & Active */
+.nav-admin a:hover, 
+.nav-admin a.active {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.nav-admin a.active {
+    background: var(--primary-color);
+    box-shadow: 0 4px 12px rgba(78, 115, 223, 0.3);
+}
+
+/* Main Content Area */
+.main-wrapper {
+    margin-left: 260px;
+    min-height: 100vh;
+}
+
+.topbar {
+    background: #fff;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.content-body {
+    padding: 30px;
+}
+
+/* Card Styling */
+.card {
+    border: none !important;
+    border-radius: 15px !important;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05) !important;
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Responsive cho Mobile */
+@media (max-width: 992px) {
+    .sidebar {
+        left: -260px;
+    }
+    .main-wrapper {
+        margin-left: 0;
+    }
+    .sidebar.show {
+        left: 0;
+    }
+}

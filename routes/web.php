@@ -56,7 +56,7 @@ Route::prefix('admin')
 
 
         // user actions
-        Route::post('users/{id}/block', [UserController::class, 'block']);
-        Route::post('users/{id}/unblock', [UserController::class, 'unblock']);
+        
+        Route::post('users/{id}/toggle', [UserController::class, 'toggleStatus'])->name('users.toggle');
     });
 });

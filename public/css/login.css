@@ -1,0 +1,171 @@
+/* =========================================
+   1. RESET & NỀN TOÀN MÀN HÌNH (Sạch & Full)
+   ========================================= */
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden; /* Ngăn thanh cuộn */
+    font-family: 'Poppins', sans-serif; /* Phông chữ hiện đại (cần nhúng trong layout) */
+}
+
+/* Đặt hình nền full toàn bộ màn hình */
+body {
+    background: url('/images/bg.jpg') no-repeat center center fixed; /* Đảm bảo đường dẫn đúng */
+    background-size: cover;
+    position: relative;
+}
+
+/* Lớp phủ tối đè lên hình nền để nổi bật chữ */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4); /* Làm tối ảnh gốc 40% */
+    z-index: 0;
+}
+
+/* =========================================
+   2. KHUNG BAO CHÍNH (Split-Screen)
+   ========================================= */
+.login-wrapper {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    position: relative;
+    z-index: 1; /* Nằm trên lớp phủ tối */
+}
+
+/* 3. BÊN TRÁI - BRAND CONTENT (Nổi bật & Thanh lịch) */
+.login-left {
+    flex: 1.2; /* Chiếm nhiều diện tích hơn */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+}
+
+.login-left h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin: 0;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3); /* Đổ bóng nhẹ cho chữ */
+}
+
+.login-left p {
+    font-size: 1.2rem;
+    font-weight: 400;
+    margin-top: 10px;
+    opacity: 0.9;
+}
+
+/* =========================================
+   4. BÊN PHẢI - FORM BOX (Hiện đại & Sang trọng)
+   ========================================= */
+.login-right {
+    flex: 0.8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* FORM BOX: Hiệu ứng mờ (Glassmorphism) cực đẹp */
+.login-box {
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.1); /* Nền trắng trong suốt */
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3); /* Đổ bóng mạnh cho form */
+    backdrop-filter: blur(15px); /* Làm mờ ảnh nền phía sau form */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Viền mờ nhẹ */
+    color: #fff; /* Chữ trong form chuyển sang màu trắng */
+}
+
+.login-box h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-align: center;
+    color: #fff;
+}
+
+/* FORM INPUTS (Tối giản & Đẹp) */
+.form-control {
+    height: 50px;
+    background: rgba(255, 255, 255, 0.1) !important; /* Input mờ nhẹ */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: #fff !important; /* Chữ trong input màu trắng */
+    padding: 10px 15px;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    transition: all 0.3s;
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.7) !important; /* Màu placeholder mờ */
+}
+
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: #6e8efb;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(110, 142, 251, 0.2);
+}
+
+/* NÚT BẤM (Màu xanh Gradient Travel) */
+.btn-primary {
+    width: 100%;
+    height: 50px;
+    background: linear-gradient(45deg, #6e8efb, #a777e3); /* Xanh tím Gradient */
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 5px 15px rgba(110, 142, 251, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px); /* Bay lên nhẹ */
+    box-shadow: 0 8px 25px rgba(110, 142, 251, 0.5);
+    background: linear-gradient(45deg, #5a76e0, #9666d9);
+}
+
+/* LINK ĐĂNG KÝ (Rõ ràng & Nổi bật) */
+.register-link {
+    margin-top: 25px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.register-link a {
+    color: #fff; /* Chữ đăng ký màu trắng nổi bật */
+    text-decoration: underline;
+    font-weight: 600;
+    margin-left: 5px;
+}
+
+.register-link a:hover {
+    color: #a777e3; /* Đổi màu khi hover */
+}
+/* Điều chỉnh khoảng cách cho form đăng ký gọn hơn */
+.login-box .form-control {
+    margin-bottom: 15px; /* Giảm margin xuống một chút so với trang login */
+}
+
+/* Hiệu ứng focus mượt mà cho các ô nhập liệu */
+.form-control:focus {
+    transform: translateX(5px); /* Nhích nhẹ sang phải khi chọn vào ô đó */
+    background: rgba(255, 255, 255, 0.25) !important;
+}
