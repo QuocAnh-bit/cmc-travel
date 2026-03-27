@@ -7,8 +7,8 @@ use App\Http\Controllers\Admin\UserController;
 
 use App\Http\Controllers\AuthController;
 
-use App\Http\Controllers\BookingController;
-use App\Http\Controllers\RoomController;
+use App\Http\Controllers\Client\BookingController;
+use App\Http\Controllers\Client\RoomController;
 use Illuminate\Support\Facades\Route;
 
 // ================= CLIENT =================
