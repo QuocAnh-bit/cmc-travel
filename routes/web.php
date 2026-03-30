@@ -57,7 +57,7 @@ Route::middleware(['web'])->group(function () {
 
             // Quản lý Phòng khách sạn
             Route::resource('rooms', AdminRoomController::class);
-
+            // resource là đại diện cho route CRUD chuẩn(index,create,store,edit,update,show,destroy)
 
             // Quản lý Đơn đặt hàng (Bookings)
             Route::resource('bookings', AdminBookingController::class);

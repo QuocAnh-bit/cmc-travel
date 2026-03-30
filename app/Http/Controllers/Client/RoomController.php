@@ -81,4 +81,23 @@ class RoomController extends Controller
     {
         //
     }
+
+    public function checkAvailable(Request $request)
+    {
+        $checkIn = $request->check_in;
+        $checkOut = $request->check_out;
+
+        $rooms = \App\Models\Room::whereDoesntHave('bookings', function ($q) use ($checkIn, $checkOut) {
+            $q->where(function ($query) use ($checkIn, $checkOut) {
+                $query->whereBetween('check_in', [$checkIn, $checkOut])
+                    ->orWhereBetween('check_out', [$checkIn, $checkOut])
+                    ->orWhere(function ($q2) use ($checkIn, $checkOut) {
+                        $q2->where('check_in', '<=', $checkIn)
+                            ->where('check_out', '>=', $checkOut);
+                    });
+            });
+        })->get();
+
+        return response()->json($rooms);
+    }
 }

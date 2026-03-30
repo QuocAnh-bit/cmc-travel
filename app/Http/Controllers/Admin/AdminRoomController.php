@@ -23,13 +23,27 @@ class AdminRoomController extends Controller
     {
         $request->validate([
             'name' => 'required',
+            'hotel_name' => 'required',
+            'location' => 'required',
             'price' => 'required|numeric',
         ]);
 
-        Room::create($request->all());
+        $data = $request->all();
 
-        return redirect()->route('admin.rooms.index')->with('success', 'Thêm phòng thành công');
+        // amenities (KHÔNG cần json_encode)
+        $data['amenities'] = $request->amenities ?? [];
+
+        // upload ảnh
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('rooms', 'public');
+        }
+
+        Room::create($data);
+
+        return redirect()->route('admin.rooms.index')
+            ->with('success', 'Thêm phòng thành công');
     }
+    
 
     public function edit($id)
     {
@@ -39,15 +53,40 @@ class AdminRoomController extends Controller
 
     public function update(Request $request, $id)
     {
-        $room = Room::findOrFail($id);
-        $room->update($request->all());
+        $request->validate([
+            'name' => 'required',
+            'hotel_name' => 'required',
+            'location' => 'required',
+            'price' => 'required|numeric',
+        ]);
 
-        return redirect()->route('admin.rooms.index')->with('success', 'Cập nhật thành công');
+        $room = Room::findOrFail($id);
+
+        $data = $request->all();
+
+        $data['amenities'] = $request->amenities ?? [];
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('rooms', 'public');
+        }
+
+        $room->update($data);
+
+            return redirect()->route('admin.rooms.index')
+            ->with('success', 'Cập nhật thành công');
+    }
+
+    public function show($id)
+    {
+        $room = Room::findOrFail($id);
+        return view('admin.rooms.show', compact('room'));
     }
 
     public function destroy($id)
     {
-        Room::destroy($id);
-        return back()->with('success', 'Xóa thành công');
+        $room = Room::findOrFail($id);
+        $room->delete();
+
+        return back()->with('success', 'Đã xóa (soft delete)');
     }
 }
