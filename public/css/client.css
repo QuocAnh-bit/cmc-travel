@@ -1,149 +1,492 @@
-/* 1. KHAI BÁO BIẾN & CÀI ĐẶT CHUNG */
+/* CMC TRAVEL - FULL DESIGN SYSTEM 2026 */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lexend:wght@400;600;700&display=swap');
+
 :root {
-    --primary-blue: #003c71;    /* Xanh đậm iVIVU */
-    --secondary-blue: #002d56;  /* Xanh tối cho Topbar */
-    --accent-orange: #ff6d00;   /* Cam nút tìm kiếm/giá */
-    --light-bg: #f5f7f9;
-    --text-muted: #6c757d;
+    /* Brand Colors */
+    --primary: #003580;
+    --primary-light: #0056b3;
+    --secondary: #febb02;
+    --accent: #ff5a5f;
+    --dark: #1a1a1a;
+    --light: #f4f7fa;
+    --white: #ffffff;
+    
+    /* Functional Colors */
+    --text-main: #2d3436;
+    --text-muted: #636e72;
+    --border-color: rgba(0, 0, 0, 0.08);
+
+    /* Effects & Glassmorphism */
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
+    --shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.12);
+    --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
+/* 1. NỀN TẢNG CHUNG */
 body {
-    font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
-    background-color: var(--light-bg);
-    color: #333;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--light);
+    color: var(--text-main);
+    overflow-x: hidden;
+    scroll-behavior: smooth;
 }
 
-/* 2. HEADER & NAVIGATION */
-.topbar-client {
-    background-color: var(--secondary-blue);
-    color: white;
-    font-size: 0.85rem;
-    padding: 6px 0;
+h1, h2, h3, .navbar-brand {
+    font-family: 'Lexend', sans-serif;
 }
 
-.navbar-custom {
-    background-color: var(--primary-blue);
-    padding: 12px 0;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+/* 2. NAVBAR GLASSMORPHISM */
+.navbar {
+    background: var(--glass-bg) !important;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid var(--glass-border);
+    padding: 15px 0;
+    transition: var(--transition);
 }
 
-.nav-link-custom {
-    color: rgba(255,255,255,0.9) !important;
-    font-weight: 500;
-    margin-right: 15px;
-    transition: all 0.2s ease;
-}
-
-.nav-link-custom:hover {
-    color: #fff !important;
-    text-decoration: underline;
-    opacity: 1;
-}
-
-/* 3. HERO BANNER & SEARCH BOX */
-.hero-banner {
-    background: linear-gradient(rgba(0, 45, 86, 0.5), rgba(0, 45, 86, 0.3)), 
-                url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1920&q=80');
-    background-size: cover;
-    background-position: center;
-    height: 450px;
+.navbar-brand {
+    font-weight: 800;
+    font-size: 26px;
+    color: var(--primary) !important;
     display: flex;
-    align-items: center; /* Căn giữa nội dung banner theo chiều dọc */
+    align-items: center;
 }
 
-.search-container {
-    margin-top: -100px; /* Đẩy search box đè lên banner */
+.navbar-brand span { color: var(--secondary); margin-left: 5px; }
+
+.nav-link {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--dark) !important;
+    margin: 0 10px;
     position: relative;
-    z-index: 99;
 }
 
-.search-box {
-    background: #fff;
-    border: 1px solid rgba(0,0,0,0.05);
-    border-radius: 16px !important; /* Bo góc mượt hơn */
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px; left: 50%;
+    width: 0; height: 2px;
+    background: var(--primary);
+    transition: var(--transition);
+    transform: translateX(-50%);
 }
 
-/* 4. FORM INPUTS & BUTTONS */
-.form-control-lg, .form-select-lg {
-    border-radius: 8px;
-    font-size: 0.95rem;
-    border-color: #dee2e6;
-    transition: all 0.3s ease;
+.nav-link:hover::after { width: 80%; }
+
+/* 3. HERO & SEARCH BOX NEUMORPHISM */
+.hero-v3 {
+    border-radius: 0 0 40px 40px;
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), 
+                url('https://hotelbooking.com.vn/images/slider/hotel-booking-banner.jpg') center/cover;
 }
 
-.form-control-lg:focus {
-    box-shadow: 0 0 0 0.25rem rgba(0, 60, 113, 0.1);
-    border-color: var(--primary-blue);
+.search-wrapper.glass-panel {
+    background: var(--white);
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: var(--shadow-heavy);
+    margin-top: -50px;
+    z-index: 100;
 }
 
-.btn-search-tour {
-    background-color: var(--accent-orange) !important;
-    color: white !important;
-    border: none;
-    font-weight: 700;
-    border-radius: 8px;
-    padding: 12px 25px;
-    transition: all 0.3s ease;
-}
-
-.btn-search-tour:hover {
-    background-color: #e66200 !important;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 109, 0, 0.3);
-}
-
-/* 5. CARDS (TOUR/ROOM) */
-.item-card {
-    border: none;
-    border-radius: 12px;
+/* 4. PREMIUM CARD & HOVER EFFECTS */
+.item-card, .combo-card {
+    border: none !important;
+    border-radius: 16px !important;
+    background: var(--white);
+    transition: var(--transition);
+    height: 100%;
     overflow: hidden;
-    background: #fff;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
 
 .item-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.12) !important;
+    transform: translateY(-12px);
+    box-shadow: var(--shadow-heavy);
 }
 
-.object-fit-cover {
-    object-fit: cover;
+.hover-zoom img {
+    transition: transform 0.8s ease;
+}
+
+.item-card:hover .hover-zoom img {
+    transform: scale(1.1);
+}
+
+.badge-sale {
+    background: var(--accent);
+    color: white;
+    font-weight: 800;
+    border-radius: 50px;
+    padding: 5px 15px;
+}
+
+/* 5. GRID ĐIỂM ĐẾN (STYLISH LAYOUT) */
+.dest-card-premium {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: var(--shadow-soft);
+}
+
+.overlay-grad {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 70%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+    color: white;
+    transition: var(--transition);
+}
+
+.dest-card-premium:hover .overlay-grad {
+    background: linear-gradient(to top, var(--primary) 0%, transparent 100%);
+    opacity: 0.9;
+}
+
+/* 6. FAQ & ACCORDION MODERN */
+.accordion-item {
+    border: none !important;
+    margin-bottom: 12px;
+    border-radius: 12px !important;
+    box-shadow: var(--shadow-soft);
+}
+
+.accordion-button {
+    font-weight: 700;
+    padding: 20px;
+    border-radius: 12px !important;
+    color: var(--dark);
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: var(--primary);
+    color: white;
+}
+
+/* 7. FOOTER DARK LUXURY */
+.footer-premium {
+    background: #0d1117;
+    color: white;
+    padding-top: 80px;
+}
+
+.footer-title {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 25px;
+    position: relative;
+    display: inline-block;
+}
+
+.footer-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px; left: 0;
+    width: 40px; height: 3px;
+    background: var(--primary);
+}
+
+.social-links a {
+    width: 42px; height: 42px;
+    background: rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: white;
+    transition: var(--transition);
+}
+
+.social-links a:hover {
+    background: var(--primary);
+    transform: translateY(-5px) rotate(360deg);
+}
+
+/* 8. HIỆU ỨNG LOADING/ANIMATION */
+.shimmer {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    to { background-position: -200% 0; }
+}
+
+/* Nút bấm hiệu ứng nảy */
+.btn-primary {
+    background: var(--primary);
+    border: none;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-weight: 700;
+    transition: var(--transition);
+}
+
+.btn-primary:hover {
+    transform: scale(1.05);
+    background: var(--primary-light);
+    box-shadow: 0 10px 20px rgba(0,53,128,0.3);
+}
+.hero-slider {
     width: 100%;
+    height: 80vh; /* Độ cao slider */
+    border-radius: 0 0 50px 50px;
 }
 
-/* 6. TYPOGRAPHY & UTILITIES */
-.text-orange {
-    color: var(--accent-orange);
-}
-
-.text-truncate-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+.swiper-slide {
+    position: relative;
     overflow: hidden;
-    height: 2.8rem; /* Cố định chiều cao để các card đều nhau */
-    line-height: 1.4;
 }
 
-.text-truncate-3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
+.parallax-bg {
+    position: absolute;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+    filter: brightness(0.8); /* Làm tối ảnh để nổi bật chữ */
+}
+
+/* Hiệu ứng chữ khi slide active */
+.swiper-slide-active .slide-title {
+    animation: fadeInUp 0.8s both 0.2s;
+}
+.swiper-slide-active .slide-text {
+    animation: fadeInUp 0.8s both 0.4s;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.swiper-pagination-bullet-active {
+    background: var(--secondary) !important;
+}
+/* --- HERO SLIDER V3 PRENIUM --- */
+.hero-slider {
+    width: 100%;
+    height: 80vh; /* Độ cao chiếm 80% màn hình ✅ */
+    border-radius: 0 0 50px 50px; /* Bo góc mềm mại ✅ */
     overflow: hidden;
-    height: 3.6rem;
+}
+
+.parallax-bg {
+    position: absolute;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+    filter: brightness(0.85); /* Làm tối ảnh nền nhẹ để nổi chữ */
+}
+
+/* Hiệu ứng chữ khi slide active */
+.swiper-slide-active .slide-title {
+    animation: fadeInUp 0.8s both 0.2s; /* Bay lên từ dưới ✅ */
+}
+.swiper-slide-active .slide-text {
+    animation: fadeInUp 0.8s both 0.4s;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* pagination màu vàng cho khít với màu ước mơ */
+.swiper-pagination-bullet-active {
+    background: var(--secondary) !important;
+}
+/* --- HERO SECTION V4 - PREDIUM GLASSMORPHISM --- */
+.hero-v4 {
+    position: relative;
+    border-radius: 0 0 50px 50px; /* Bo góc mềm mại cho phần Hero */
+    overflow: hidden;
+    background: url('https://hotelbooking.com.vn/images/slider/hotel-booking-banner.jpg') center/cover;
+    height: 90vh; /* Độ cao chiếm 90% màn hình */
+}
+
+.hero-v4 .parallax-bg {
+    filter: brightness(0.9); /* Giảm độ sáng của ảnh một chút */
+}
+
+/* KHỐI NỀN MỜ (GLASSMORPHISM) ✅ */
+.hero-content-panel {
+    background: rgba(255, 255, 255, 0.1); /* Màu nền trắng trong suốt 10% */
+    backdrop-filter: blur(20px); /* HIỆU ỨNG MỜ ✅ */
+    -webkit-backdrop-filter: blur(20px); /* Cho Safari */
+    border: 1px solid rgba(255, 255, 255, 0.15); /* Viền mờ nhẹ ✅ */
+    padding: 40px;
+    border-radius: 20px; /* Bo góc ✅ */
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1); /* Đổ bóng nhẹ tạo chiều sâu ✅ */
+    max-width: 600px;
+    position: relative;
+    z-index: 10;
+}
+
+/* Kiểu dáng cho tiêu đề và description bên trong */
+.hero-content-panel .hero-title {
+    font-size: 3.2rem;
+    font-weight: 800;
     line-height: 1.2;
-    color: var(--text-muted);
 }
 
-/* Hiệu ứng mượt cho các nút chuyển trang (Pagination) */
-.pagination .page-link {
-    color: var(--primary-blue);
-    border-radius: 5px;
-    margin: 0 3px;
+.hero-content-panel .hero-text {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.8;
 }
 
-.pagination .page-item.active .page-link {
-    background-color: var(--primary-blue);
-    border-color: var(--primary-blue);
+/* Label ngày nhận/trả phòng mờ */
+.hero-content-panel label.text-muted {
+    color: rgba(255,255,255,0.5) !important;
+}
+
+/* Các pagination dots màu vàng */
+.swiper-pagination-bullet-active {
+    background: var(--secondary) !important;
+}
+/* --- CMC TRAVEL - PREDIUM SYSTEM --- */
+:root {
+    --primary: #002d62;      /* Navy đậm giúp text rõ nét ✅ */
+    --secondary: #c5a059;    /* Vàng cát sang trọng cho "Ước mơ" ✅ */
+    --white: #ffffff;
+    --glass-bg: rgba(255, 255, 255, 0.15); 
+    --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+/* HERO SECTION */
+.hero-v4 {
+    height: 90vh;
+    position: relative;
+    border-radius: 0 0 60px 60px;
+    overflow: hidden;
+}
+
+.parallax-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.9);
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(0,0,0,0.4), transparent);
+    z-index: 1;
+}
+
+/* KHỐI NỀN MỜ GLASSMORPHISM ✅ */
+.hero-content-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(25px) saturate(160%); /* Làm mờ và tươi màu nền ✅ */
+    -webkit-backdrop-filter: blur(25px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 50px;
+    border-radius: 30px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+}
+
+.hero-title {
+    font-size: 3.8rem;
+    font-weight: 800;
+    color: var(--white);
+    text-shadow: 0 4px 15px rgba(0,0,0,0.3); /* Bóng đổ giúp chữ nổi hẳn ✅ */
+    margin-bottom: 25px;
+}
+
+.hero-title span { color: var(--secondary) !important; }
+
+.hero-text {
+    font-size: 1.25rem;
+    color: rgba(255,255,255,0.95); /* Trắng rõ nét ✅ */
+    line-height: 1.8;
+    margin-bottom: 35px;
+}
+
+/* VOUCHER TAGS */
+.voucher-tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 8px 18px;
+    border-radius: 50px;
+    color: var(--white);
+    font-size: 0.9rem;
+    margin-right: 12px;
+}
+
+/* CARD HIỆU ỨNG NỔI */
+.item-card {
+    border: none;
+    border-radius: 20px;
+    transition: var(--transition);
+    background: var(--white);
+}
+
+.item-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12) !important;
+}
+
+.badge-sale {
+    position: absolute;
+    top: 15px; left: 15px;
+    background: #ff5a5f;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 50px;
+    font-weight: 700;
+}
+
+/* STATS ITEM HOVER */
+.stat-item {
+    transition: var(--transition);
+}
+.stat-item:hover {
+    background: #f8f9fa;
+}
+
+/* FLOATING ANIMATION */
+.floating-img-wrapper {
+    animation: floatAnim 5s ease-in-out infinite;
+}
+@keyframes floatAnim {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+.avatar-circle {
+    width: 35px;
+    height: 35px;
+    background-color: #002d62; /* Màu navy của CMC Travel */
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.dropdown-item {
+    padding: 10px 20px;
+    font-size: 14px;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
 }
