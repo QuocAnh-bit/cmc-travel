@@ -4,6 +4,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use App\Models\Hotel; // Import Model Hotel
+use Illuminate\Pagination\Paginator; // Thêm dòng này
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,5 +14,6 @@ class AppServiceProvider extends ServiceProvider
         View::composer('*', function ($view) {
             $view->with('header_hotels', Hotel::all());
         });
+        Paginator::useBootstrapFive();
     }
 }

@@ -9,10 +9,16 @@ use Illuminate\Http\Request;
 class AdminHotelController extends Controller
 {
     public function index()
-    {
-        $hotels = Hotel::withCount('rooms')->latest()->get(); // Lấy kèm số lượng phòng
-        return view('admin.hotels.index', compact('hotels'));
-    }
+{
+    $hotels = Hotel::with(['rooms' => function($q) {
+        $q->orderBy('price', 'asc'); // Lấy phòng rẻ nhất lên trước
+    }])
+    ->withCount('rooms')
+    ->latest()
+    ->paginate(9); // Phân trang 9 để khớp giao diện 3 cột
+
+    return view('admin.hotels.index', compact('hotels'));
+}
 
     public function store(Request $request)
     {

@@ -490,3 +490,106 @@ h1, h2, h3, .navbar-brand {
 .dropdown-item:hover {
     background-color: #f8f9fa;
 }
+/* --- TỐI ƯU MEGA MENU: GỌN - ĐẸP - THẲNG HÀNG --- */
+
+/* 1. Điểm neo: Để bảng bắt đầu từ lề trái của chữ "KHÁCH SẠN" */
+.nav-item.has-megamenu {
+    position: relative !important; /* Đổi từ static sang relative để căn theo chữ */
+}
+
+/* 2. Cấu trúc bảng Megamenu gọn lại */
+.megamenu {
+    width: 600px !important; /* Thu nhỏ độ rộng bảng */
+    left: 0 !important;      /* Căn lề trái thẳng hàng với chữ KHÁCH SẠN */
+    right: auto !important;
+    transform: translateY(20px) !important; /* Chỉ dịch xuống, không dịch ngang */
+    
+    display: block !important;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.3s ease;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+    border: 1px solid #eee !important;
+    background: #fff !important;
+}
+
+/* 3. Bỏ gạch chân và chỉnh font chữ */
+.menu-hotel-list li a {
+    text-decoration: none !important; /* XÓA GẠCH CHÂN ✅ */
+    color: #444 !important;
+    font-size: 14px;
+    padding: 6px 10px;
+    display: block;
+    border-radius: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: 0.2s;
+}
+
+/* 4. Hiệu ứng Hover cho tên khách sạn */
+.menu-hotel-list li a:hover {
+    background: #f0f7ff;
+    color: var(--primary) !important;
+    text-decoration: none !important; /* Đảm bảo không hiện gạch chân khi hover */
+    padding-left: 15px;
+}
+
+/* 5. Kích hoạt Hover cho toàn bảng */
+.nav-item.has-megamenu:hover .megamenu {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(10px) !important;
+}
+
+/* Vùng đệm tránh mất chuột */
+.nav-item.has-megamenu::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 15px;
+}
+
+/* Bỏ gạch chân cho tiêu đề h6 nếu có */
+.megamenu h6 {
+    font-size: 13px;
+    text-transform: uppercase;
+    color: var(--primary);
+    border-bottom: none !important; /* Bỏ gạch chân tiêu đề */
+    margin-bottom: 15px;
+}
+/* Sidebar bộ lọc */
+.filter-sidebar {
+    position: sticky;
+    top: 100px; /* Cố định bộ lọc khi cuộn trang */
+}
+
+/* Card khách sạn */
+.hotel-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hotel-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+}
+
+.transition {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Pagination Style */
+.pagination .page-item.active .page-link {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.pagination .page-link {
+    color: var(--primary);
+    border-radius: 50%;
+    margin: 0 5px;
+}

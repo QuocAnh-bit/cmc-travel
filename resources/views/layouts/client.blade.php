@@ -24,11 +24,42 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <ul class="navbar-nav ms-auto align-items-center">
+    <li class="nav-item dropdown has-megamenu">
+    <a class="nav-link dropdown-toggle {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}" id="hotelMegaMenu" data-bs-toggle="dropdown">
+        KHÁCH SẠN
+    </a>
+    
+    <div class="dropdown-menu megamenu shadow-lg border-0 p-4" aria-labelledby="hotelMegaMenu">
+        <div class="row g-4">
+            {{-- Chia danh sách hotels thành các nhóm 4 mục cho mỗi cột --}}
+            @foreach($hotels->chunk(4) as $chunk)
+                <div class="col-md-4 {{ !$loop->last ? 'border-end' : '' }}">
+                    <h6 class="fw-bold text-primary mb-3">
+                        @if($loop->iteration == 1) <i class="fas fa-star me-2"></i>Nổi bật 
+                        @elseif($loop->iteration == 2) <i class="fas fa-hot-cdn me-2"></i>Ưu đãi 
+                        @else <i class="fas fa-crown me-2"></i>Cao cấp @endif
+                    </h6>
+                    <ul class="list-unstyled menu-hotel-list">
+                        @foreach($chunk as $hotel)
+                            <li>
+                                <a href="{{ route('hotels.index', ['hotel_id' => $hotel->id]) }}" title="{{ $hotel->name }}">
+                                    {{ $hotel->name }}
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endforeach
+        </div>
+        
+        <div class="mt-3 pt-3 border-top d-flex justify-content-between align-items-center">
+            <span class="small text-muted italic">Khám phá hệ thống khách sạn của CMC Travel</span>
+           <a href="{{ route('hotels.index') }}" class="btn btn-sm btn-outline-primary rounded-pill px-3">Xem tất cả</a>
+        </div>
+    </div>
+</li>
     <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">KHÁCH SẠN</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link {{ request()->is('rooms*') ? 'active' : '' }}" href="{{ route('rooms.index') }}">COMBO GIÁ TỐT</a>
+        <a class="nav-link {{ request()->is('hotels*') ? 'active' : '' }}" href="{{ route('hotels.index') }}">COMBO GIÁ TỐT</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="#">VOUCHER</a>

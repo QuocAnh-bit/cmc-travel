@@ -127,7 +127,10 @@
             <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="{{ $loop->iteration * 100 }}">
                 <div class="item-card hover-float h-100 border-0 bg-white shadow-sm rounded-4 overflow-hidden transition">
                     <div class="position-relative overflow-hidden">
-                        <img src="{{ asset('storage/' . $room->image) }}" class="w-100 transition-transform" style="height: 220px; object-fit: cover;">
+                        <img src="{{ \Illuminate\Support\Str::startsWith($room->image, ['http://', 'https://']) ? $room->image : asset('storage/' . $room->image) }}" 
+     class="w-100 transition-transform" 
+     style="height: 220px; object-fit: cover;"
+     onerror="this.src='https://placehold.co/600x400?text=CMC+Travel'">
                         <div class="badge-sale">-{{$room->discount}}%</div>
                     </div>
                     <div class="p-3">

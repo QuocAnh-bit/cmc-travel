@@ -12,8 +12,8 @@ class AdminRoomController extends Controller
     public function index()
     {
         // Sử dụng with('hotel') để tối ưu query (Eager Loading)
-        $rooms = Room::with('hotel')->get();
-        return view('admin.rooms.index', compact('rooms'));
+        $rooms = Room::with('hotel')->latest()->paginate(10);
+    return view('admin.rooms.index', compact('rooms'));
     }
 
     public function create()

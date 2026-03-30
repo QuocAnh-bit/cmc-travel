@@ -33,9 +33,11 @@
                         <tr>
                             <td class="ps-4">
                                 <div class="position-relative">
-                                    <img src="{{ $room->image ? asset('storage/'.$room->image) : 'https://via.placeholder.com/150' }}" 
-                                         class="rounded shadow-sm border" 
-                                         style="width: 70px; height: 50px; object-fit: cover;">
+                                    {{-- Kiểm tra nếu image là link URL thì hiện luôn, nếu không thì mới dùng asset(storage) --}}
+                                <img src="{{ Str::startsWith($room->image, ['http://', 'https://']) ? $room->image : asset('storage/' . $room->image) }}" 
+                                    class="rounded shadow-sm border" 
+                                    style="width: 70px; height: 50px; object-fit: cover;"
+                                    onerror="this.src='https://via.placeholder.com/150?text=No+Image'">
                                     @if($room->is_featured)
                                         <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-warning text-dark border border-white" style="font-size: 10px;">
                                             <i class="fas fa-star"></i>
@@ -100,6 +102,16 @@
             </div>
         </div>
     </div>
+    <div class="card-footer bg-white border-0 py-3">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="text-muted small">
+            Hiển thị từ {{ $rooms->firstItem() }} đến {{ $rooms->lastItem() }} trong tổng số {{ $rooms->total() }} phòng
+        </div>
+        <div>
+            {{ $rooms->onEachSide(1)->links() }}
+        </div>
+    </div>
+</div>
 </div>
 @endsection
 

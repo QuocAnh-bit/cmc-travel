@@ -44,4 +44,8 @@ class Room extends Model
     {
         return $this->hotel ? $this->hotel->address : 'Chưa xác định';
     }
+    public function rooms()
+{
+    return $this->hasMany(Room::class, 'hotel_id');
+}
 }
