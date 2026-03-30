@@ -1,16 +1,15 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminBookingController;
+use App\Http\Controllers\Admin\AdminHotelController;
 use App\Http\Controllers\Admin\AdminRoomController;
+use App\Http\Controllers\Admin\AdminTourController; 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\AdminTourController; 
-
 use App\Http\Controllers\AuthController;
-
-use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\BookingController;
-use App\Http\Controllers\Client\RoomController;
+use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\HotelController;
 use Illuminate\Support\Facades\Route;
 
 // ================= CLIENT (Giao diện người dùng) =================
@@ -22,8 +21,8 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/search', [HomeController::class, 'search'])->name('tours.search');
 
 // Danh sách và chi tiết
-Route::resource('rooms', RoomController::class)->only(['index', 'show']);
-
+Route::get('/hotels', [HotelController::class, 'index'])->name('hotels.index');
+Route::get('/hotels/{id}', [HotelController::class, 'show'])->name('hotels.show');
 
 // ================= AUTH (Đăng nhập / Đăng ký) =================
 Route::get('/login', [AuthController::class, 'login'])->name('login');
@@ -57,7 +56,9 @@ Route::middleware(['web'])->group(function () {
 
             // Quản lý Phòng khách sạn
             Route::resource('rooms', AdminRoomController::class);
-            // resource là đại diện cho route CRUD chuẩn(index,create,store,edit,update,show,destroy)
+
+            //Hotels
+            Route::resource('hotels', AdminHotelController::class);
 
             // Quản lý Đơn đặt hàng (Bookings)
             Route::resource('bookings', AdminBookingController::class);

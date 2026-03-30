@@ -10,28 +10,31 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
-       Schema::create('rooms', function (Blueprint $table) {
-    $table->id();
-    $table->string('name');             // Tên phòng (VD: Premier Ocean View)
-    $table->string('hotel_name');       // Tên khách sạn/Resort (VD: Fusion Suites Vũng Tàu)
-    $table->string('location');         // Địa điểm (Vũng Tàu, Phú Quốc...)
-    $table->integer('price');           // Giá mỗi đêm
-    $table->integer('discount')->default(0); // % Giảm giá
-    $table->string('image')->nullable();
-    $table->text('description')->nullable(); 
-    $table->json('amenities')->nullable(); // Các tiện ích (Wifi, Bể bơi, Ăn sáng...)
-    $table->string('status')->default('available'); // available, booked, maintenance
-    $table->boolean('is_featured')->default(false); // Hiện ở mục "Combo tốt nhất"
-    $table->timestamps();
-});
-    }
+{
+    Schema::create('rooms', function (Blueprint $table) {
+        $table->id();
+        $table->string('name');
+        
+        // Khai báo trực tiếp ở đây, KHÔNG cần file migration riêng lẻ nữa
+        $table->foreignId('hotel_id')->constrained('hotels')->onDelete('cascade');
+        
+        $table->integer('price');
+        $table->integer('discount')->default(0);
+        $table->string('image')->nullable();
+        $table->text('description')->nullable();
+        $table->json('amenities')->nullable();
+        $table->string('status')->default('available');
+        $table->boolean('is_featured')->default(false);
+        $table->timestamps();
+    });
+}
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
+        // Khi xóa bảng rooms, cần đảm bảo xóa sạch các ràng buộc
         Schema::dropIfExists('rooms');
     }
 };

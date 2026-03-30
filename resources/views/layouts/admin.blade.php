@@ -31,6 +31,11 @@
             </a>
         </li>
         <li>
+            <a href="{{ route('admin.hotels.index') }}" class="{{ request()->is('admin/hotels*') ? 'active' : '' }}">
+                <i class="fas fa-city"></i> Khách Sạn
+            </a>
+        </li>
+        <li>
             <a href="/admin/rooms" class="{{ request()->is('admin/rooms*') ? 'active' : '' }}">
                 <i class="fas fa-hotel"></i> Phòng nghỉ
             </a>

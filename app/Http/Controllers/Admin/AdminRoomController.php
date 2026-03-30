@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Hotel;
 use App\Models\Room;
 use Illuminate\Http\Request;
 
@@ -10,30 +11,30 @@ class AdminRoomController extends Controller
 {
     public function index()
     {
-        $rooms = Room::all();
-        return view('admin.rooms.index', compact('rooms'));
+        // Sử dụng with('hotel') để tối ưu query (Eager Loading)
+        $rooms = Room::with('hotel')->latest()->paginate(10);
+    return view('admin.rooms.index', compact('rooms'));
     }
 
     public function create()
     {
-        return view('admin.rooms.create');
+        // 2. Lấy danh sách khách sạn để truyền vào Select Box
+        $hotels = Hotel::all();
+        return view('admin.rooms.create', compact('hotels'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required',
-            'hotel_name' => 'required',
-            'location' => 'required',
+            'hotel_id' => 'required|exists:hotels,id', // 3. Validate id khách sạn phải tồn tại
             'price' => 'required|numeric',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         $data = $request->all();
-
-        // amenities (KHÔNG cần json_encode)
         $data['amenities'] = $request->amenities ?? [];
 
-        // upload ảnh
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('rooms', 'public');
         }
@@ -43,27 +44,25 @@ class AdminRoomController extends Controller
         return redirect()->route('admin.rooms.index')
             ->with('success', 'Thêm phòng thành công');
     }
-    
 
     public function edit($id)
     {
         $room = Room::findOrFail($id);
-        return view('admin.rooms.edit', compact('room'));
+        // 4. Lấy danh sách khách sạn để sửa
+        $hotels = Hotel::all();
+        return view('admin.rooms.edit', compact('room', 'hotels'));
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
             'name' => 'required',
-            'hotel_name' => 'required',
-            'location' => 'required',
+            'hotel_id' => 'required|exists:hotels,id', // Thay đổi ở đây
             'price' => 'required|numeric',
         ]);
 
         $room = Room::findOrFail($id);
-
         $data = $request->all();
-
         $data['amenities'] = $request->amenities ?? [];
 
         if ($request->hasFile('image')) {
@@ -72,7 +71,7 @@ class AdminRoomController extends Controller
 
         $room->update($data);
 
-            return redirect()->route('admin.rooms.index')
+        return redirect()->route('admin.rooms.index')
             ->with('success', 'Cập nhật thành công');
     }
 

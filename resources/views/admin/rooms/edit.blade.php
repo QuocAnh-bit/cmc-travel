@@ -1,138 +1,118 @@
 @extends('layouts.admin')
 
-@section('title', 'Sửa phòng')
+@section('title', 'Cập nhật phòng nghỉ')
 
 @section('content')
 <div class="container-fluid px-4 py-4">
-
     <div class="card border-0 shadow-sm" style="border-radius: 15px;">
-
-        {{-- HEADER --}}
         <div class="card-header bg-white py-3">
-            <h5 class="mb-0 fw-bold text-primary">Cập nhật phòng</h5>
+            <h5 class="mb-0 fw-bold text-primary"><i class="fas fa-edit me-2"></i>Cập nhật thông tin phòng</h5>
         </div>
 
-        {{-- BODY --}}
         <div class="card-body">
-
             <form action="{{ route('admin.rooms.update', $room->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
                 <div class="row">
+                    {{-- Tên phòng --}}
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label fw-bold">Tên phòng</label>
+                        <input type="text" name="name" class="form-control" value="{{ $room->name }}" placeholder="Ví dụ: Phòng Deluxe Double" required>
+                    </div>
 
-                    {{-- TÊN PHÒNG --}}
+                    {{-- Khách sạn --}}
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Tên phòng</label>
-                        <input type="text" name="name" class="form-control" value="{{ $room->name }}">
-                    </div>
-
-                    {{-- KHÁCH SẠN --}}
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Khách sạn</label>
-                        <input type="text" name="hotel_name" class="form-control" value="{{ $room->hotel_name }}">
-                    </div>
-
-                    {{-- ĐỊA ĐIỂM --}}
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Địa điểm</label>
-                        <input type="text" name="location" class="form-control" value="{{ $room->location }}">
-                    </div>
-
-                    {{-- GIÁ --}}
-                    <div class="col-md-3 mb-3">
-                        <label class="form-label">Giá</label>
-                        <input type="number" name="price" class="form-control" value="{{ $room->price }}">
-                    </div>
-
-                    {{-- GIẢM GIÁ --}}
-                    <div class="col-md-3 mb-3">
-                        <label class="form-label">Giảm giá</label>
-                        <input type="number" name="discount" class="form-control" value="{{ $room->discount }}">
-                    </div>
-
-                    {{-- MÔ TẢ --}}
-                    <div class="col-12 mb-3">
-                        <label class="form-label">Mô tả</label>
-                        <textarea name="description" class="form-control" rows="3">{{ $room->description }}</textarea>
-                    </div>
-
-                    {{-- TIỆN ÍCH --}}
-                    <div class="col-12 mb-3">
-                        <label class="form-label">Tiện ích</label><br>
-
-                        @php
-                            $amenities = $room->amenities ?? [];
-                        @endphp
-
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="amenities[]" value="wifi"
-                                {{ in_array('wifi', $amenities) ? 'checked' : '' }}>
-                            <label class="form-check-label">Wifi</label>
-                        </div>
-
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="amenities[]" value="pool"
-                                {{ in_array('pool', $amenities) ? 'checked' : '' }}>
-                            <label class="form-check-label">Hồ bơi</label>
-                        </div>
-
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="amenities[]" value="breakfast"
-                                {{ in_array('breakfast', $amenities) ? 'checked' : '' }}>
-                            <label class="form-check-label">Ăn sáng</label>
-                        </div>
-                    </div>
-
-                    {{-- ẢNH --}}
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Ảnh mới</label>
-                        <input type="file" name="image" class="form-control">
-                    </div>
-
-                    {{-- ẢNH CŨ --}}
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Ảnh hiện tại</label><br>
-                        @if($room->image)
-                            <img src="{{ Storage::url($room->image) }}" 
-                                 style="width: 120px; height: 120px; object-fit: cover;" 
-                                 class="rounded border">
-                        @endif
-                    </div>
-
-                    {{-- TRẠNG THÁI --}}
-                    <div class="col-md-3 mb-3">
-                        <label class="form-label">Trạng thái</label>
-                        <select name="status" class="form-select">
-                            <option value="available" {{ $room->status=='available'?'selected':'' }}>Available</option>
-                            <option value="booked" {{ $room->status=='booked'?'selected':'' }}>Booked</option>
+                        <label class="form-label fw-bold">Thuộc Khách sạn (Danh mục)</label>
+                        <select name="hotel_id" class="form-select shadow-sm" required>
+                            <option value="">-- Chọn khách sạn --</option>
+                            @foreach($hotels as $hotel)
+                                <option value="{{ $hotel->id }}" {{ $room->hotel_id == $hotel->id ? 'selected' : '' }}>
+                                    {{ $hotel->name }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
 
-                    {{-- NỔI BẬT --}}
-                    <div class="col-md-3 mb-3 d-flex align-items-end">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="is_featured" value="1"
-                                {{ $room->is_featured ? 'checked' : '' }}>
-                            <label class="form-check-label">Nổi bật</label>
+                    {{-- Giá --}}
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Giá mỗi đêm (VNĐ)</label>
+                        <input type="number" name="price" class="form-control" value="{{ $room->price }}" required>
+                    </div>
+
+                    {{-- MÔ TẢ (Trường mới bổ sung) --}}
+                    <div class="col-12 mb-3">
+                        <label class="form-label fw-bold">Mô tả chi tiết phòng</label>
+                        <textarea name="description" id="editor" class="form-control" rows="5" placeholder="Nhập giới thiệu chi tiết về phòng, quy định...">{{ $room->description }}</textarea>
+                        <small class="text-muted">Mô tả giúp khách hàng hiểu rõ hơn về không gian và dịch vụ của phòng.</small>
+                    </div>
+
+                    {{-- Tiện ích --}}
+                    <div class="col-12 mb-3">
+                        <label class="form-label fw-bold">Tiện nghi (Chọn nhiều)</label>
+                        <div class="d-flex flex-wrap gap-3 p-3 border rounded bg-light">
+                            @php 
+                                $list_amenities = ['Wifi', 'Điều hòa', 'Tivi', 'Tủ lạnh', 'Ban công', 'Bồn tắm'];
+                                $room_amenities = $room->amenities ?? [];
+                            @endphp
+                            @foreach($list_amenities as $item)
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="amenities[]" value="{{ $item }}" 
+                                    id="check{{ $loop->index }}" {{ in_array($item, $room_amenities) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="check{{ $loop->index }}">{{ $item }}</label>
+                            </div>
+                            @endforeach
                         </div>
                     </div>
 
+                    {{-- Hình ảnh --}}
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Hình ảnh phòng</label>
+                        <input type="file" name="image" class="form-control mb-2">
+                        @if($room->image)
+                            <div class="mt-2 text-center border p-2 rounded bg-light">
+                                <p class="small text-muted mb-1">Ảnh hiện tại:</p>
+                                <img src="{{ asset('storage/' . $room->image) }}" style="max-height: 150px;" class="rounded shadow-sm">
+                            </div>
+                        @endif
+                    </div>
+
+                    {{-- Trạng thái & Nổi bật --}}
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Cấu hình khác</label>
+                        <div class="row">
+                            <div class="col-6">
+                                <select name="status" class="form-select">
+                                    <option value="available" {{ $room->status == 'available' ? 'selected' : '' }}>Sẵn sàng</option>
+                                    <option value="booked" {{ $room->status == 'booked' ? 'selected' : '' }}>Đã đặt</option>
+                                </select>
+                            </div>
+                            <div class="col-6 d-flex align-items-center">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" name="is_featured" value="1" id="isFeatured" {{ $room->is_featured ? 'checked' : '' }}>
+                                    <label class="form-check-label fw-bold" for="isFeatured">Phòng nổi bật</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                {{-- BUTTON --}}
-                <div class="d-flex justify-content-end gap-2 mt-3">
-                    <a href="{{ route('admin.rooms.index') }}" class="btn btn-light">
-                        Quay lại
-                    </a>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-1"></i> Cập nhật
+                <div class="d-flex justify-content-end gap-2 mt-4 border-top pt-3">
+                    <a href="{{ route('admin.rooms.index') }}" class="btn btn-light border px-4">Hủy bỏ</a>
+                    <button type="submit" class="btn btn-primary px-5 shadow-sm">
+                        <i class="fas fa-save me-1"></i> Cập nhật ngay
                     </button>
                 </div>
-
             </form>
-
         </div>
     </div>
 </div>
+@endsection
+
+{{-- Script để tích hợp bộ soạn thảo văn bản cho đẹp (Tùy chọn) --}}
+@section('scripts')
+<script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+<script>
+    ClassicEditor.create(document.querySelector('#editor')).catch(error => { console.error(error); });
+</script>
 @endsection
