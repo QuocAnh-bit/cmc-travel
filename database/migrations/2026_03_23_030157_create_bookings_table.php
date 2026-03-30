@@ -12,9 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('bookings', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+    $table->id();
+    $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+    $table->foreignId('room_id')->constrained()->cascadeOnDelete();
+    $table->date('check_in');
+    $table->date('check_out');
+    $table->integer('total_price');
+    $table->string('status')->default('pending');
+    $table->timestamps();
+});
     }
 
     /**
