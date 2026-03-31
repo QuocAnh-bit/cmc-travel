@@ -36,6 +36,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // ================= BOOKING (Chỉ dành cho người dùng đã đăng nhập) =================
 Route::middleware('auth')->group(function () {
+    Route::post('/rooms/{room}/availability', [BookingController::class, 'availability'])->name('rooms.availability');
+    Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
     Route::resource('bookings', BookingController::class);
 });
 

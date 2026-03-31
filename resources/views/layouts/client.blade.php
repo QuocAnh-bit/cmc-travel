@@ -64,6 +64,11 @@
     <li class="nav-item">
         <a class="nav-link" href="#">VOUCHER</a>
     </li>
+    @auth
+    <li class="nav-item">
+        <a class="nav-link {{ request()->routeIs('bookings.*') ? 'active' : '' }}" href="{{ route('bookings.index') }}">ĐƠN CỦA TÔI</a>
+    </li>
+    @endauth
     <li class="nav-item btn-contact-nav">
         <a class="nav-link px-4 ms-lg-3" href="#">LIÊN HỆ</a>
     </li>

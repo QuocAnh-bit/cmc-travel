@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
 use App\Models\Hotel;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class HotelController extends Controller
@@ -63,7 +65,32 @@ class HotelController extends Controller
      */
     public function show($id)
     {
-        $hotel = Hotel::with('hotels')->findOrFail($id);
-        return view('clients.hotels.show', compact('hotel'));
+        $hotel = Hotel::with(['rooms' => function ($query) {
+            $query->orderBy('price');
+        }])->findOrFail($id);
+
+        $checkIn = request('check_in');
+        $checkOut = request('check_out');
+        $availableRoomIds = [];
+
+        if ($checkIn && $checkOut) {
+            $start = Carbon::parse($checkIn)->startOfDay();
+            $end = Carbon::parse($checkOut)->startOfDay();
+
+            $bookedRoomIds = Booking::active()
+                ->whereIn('room_id', $hotel->rooms->pluck('id'))
+                ->where('check_in', '<', $end->toDateString())
+                ->where('check_out', '>', $start->toDateString())
+                ->pluck('room_id');
+
+            $availableRoomIds = $hotel->rooms
+                ->whereNotIn('id', $bookedRoomIds)
+                ->pluck('id')
+                ->all();
+        }
+
+        $hotels = Hotel::orderBy('created_at', 'desc')->take(12)->get();
+
+        return view('clients.hotels.show', compact('hotel', 'hotels', 'checkIn', 'checkOut', 'availableRoomIds'));
     }
 }
