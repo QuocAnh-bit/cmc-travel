@@ -144,7 +144,10 @@
                                 <small class="text-decoration-line-through text-muted small d-block">{{ number_format($room->price * 1.2) }}đ</small>
                                 <span class="fs-5 fw-bold text-danger">{{ number_format($room->price) }}đ</span>
                             </div>
-                            <button class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm">Đặt ngay</button>
+                            <a href="{{ route('hotels.show', ['id' => $room->hotel_id, 'room' => $room->id]) }}#room-{{ $room->id }}"
+                               class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm">
+                                Đặt ngay
+                            </a>
                         </div>
                     </div>
                 </div>
