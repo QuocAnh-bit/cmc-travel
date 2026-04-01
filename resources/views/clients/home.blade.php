@@ -73,12 +73,18 @@
 <div class="container position-relative" style="z-index: 100;">
     <div class="search-wrapper glass-panel mx-auto" style="max-width: 900px;">
         <h5 class="fw-bold mb-3"><i class="fas fa-search me-2 text-primary"></i>Tìm khách sạn giá tốt</h5>
-        <form action="#" method="GET" class="row g-3 align-items-end">
+        
+        {{-- 1. Thêm action trỏ đến route danh sách khách sạn --}}
+       <form action="{{ route('client.search') }}" method="GET" class="row g-3 align-items-end">
             <div class="col-lg-7">
                 <label class="small fw-bold text-muted mb-1 text-uppercase">Địa điểm</label>
                 <div class="input-group border rounded-3 p-2">
                     <span class="input-group-text bg-transparent border-0"><i class="fas fa-map-marker-alt text-primary"></i></span>
-                    <input type="text" class="form-control border-0" placeholder="Thành phố, địa danh, khách sạn...">
+                    
+                    {{-- 2. Quan trọng: Thêm name="search" và value để giữ từ khóa sau khi tìm --}}
+                    <input type="text" name="search" value="{{ request('search') }}" 
+                           class="form-control border-0" 
+                           placeholder="Thành phố, địa danh, khách sạn...">
                 </div>
             </div>
             <div class="col-lg-5">
