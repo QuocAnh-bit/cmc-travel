@@ -20,7 +20,7 @@ class HomeController extends Controller
                     ->orderBy('created_at', 'desc')
                     ->take(8)
                     ->get();
-
+    
     return view('clients.home', compact('featuredRooms', 'allRooms','hotels'));
 }
 }

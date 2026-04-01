@@ -15,6 +15,18 @@
     <link rel="stylesheet" href="{{ asset('css/client.css') }}">
 </head>
 <body>
+    <div id="global-loader" class="luxury-loader">
+    <div class="loader-content">
+        <div class="logo-wrapper mb-4">
+            <i class="fas fa-paper-plane loader-icon"></i>
+            <h1 class="brand-name">CMC <span>Travel</span></h1>
+        </div>
+        <div class="loading-bar-container">
+            <div class="loading-bar"></div>
+        </div>
+        <p class="tagline">KHÁM PHÁ TRẢI NGHIỆM THƯỢNG LƯU</p>
+    </div>
+</div>
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
             <a class="navbar-brand" href="/">
@@ -32,24 +44,30 @@
     <div class="dropdown-menu megamenu shadow-lg border-0 p-4" aria-labelledby="hotelMegaMenu">
         <div class="row g-4">
             {{-- Chia danh sách hotels thành các nhóm 4 mục cho mỗi cột --}}
-            @foreach($hotels->chunk(4) as $chunk)
-                <div class="col-md-4 {{ !$loop->last ? 'border-end' : '' }}">
-                    <h6 class="fw-bold text-primary mb-3">
-                        @if($loop->iteration == 1) <i class="fas fa-star me-2"></i>Nổi bật 
-                        @elseif($loop->iteration == 2) <i class="fas fa-hot-cdn me-2"></i>Ưu đãi 
-                        @else <i class="fas fa-crown me-2"></i>Cao cấp @endif
-                    </h6>
-                    <ul class="list-unstyled menu-hotel-list">
-                        @foreach($chunk as $hotel)
-                            <li>
-                                <a href="{{ route('hotels.index', ['hotel_id' => $hotel->id]) }}" title="{{ $hotel->name }}">
-                                    {{ $hotel->name }}
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
+            {{-- Sửa $hotels thành $header_hotels và giữ nguyên logic chunk(4) --}}
+@foreach($header_hotels->chunk(4) as $chunk)
+    <div class="col-md-4 {{ !$loop->last ? 'border-end' : '' }} mb-3">
+        @if($loop->iteration == 1)
+            <h6 class="fw-bold text-primary mb-3"><i class="fas fa-star me-2"></i>NỔI BẬT</h6>
+        @elseif($loop->iteration == 2)
+            <h6 class="fw-bold text-primary mb-3"><i class="fas fa-fire me-2"></i>ƯU ĐÃI</h6>
+        @elseif($loop->iteration == 3)
+            <h6 class="fw-bold text-primary mb-3"><i class="fas fa-crown me-2"></i>CAO CẤP</h6>
+        @endif
+
+        <ul class="list-unstyled menu-hotel-list mb-0">
+            @foreach($chunk as $hotel)
+                <li class="mb-2">
+                    <a href="{{ route('hotels.index', ['hotel_id' => $hotel->id]) }}" 
+                       class="text-decoration-none text-dark small d-flex align-items-center">
+                        <i class="fas fa-chevron-right me-2 small opacity-50 text-primary"></i>
+                        <span>{{ $hotel->name }}</span>
+                    </a>
+                </li>
             @endforeach
+        </ul>
+    </div>
+@endforeach
         </div>
         
         <div class="mt-3 pt-3 border-top d-flex justify-content-between align-items-center">
@@ -70,7 +88,7 @@
     </li>
     @endauth
     <li class="nav-item btn-contact-nav">
-        <a class="nav-link px-4 ms-lg-3" href="#">LIÊN HỆ</a>
+        <a class="nav-link px-4 ms-lg-3" {{ request()->routeIs('clients.contacts.index') ? 'active' : '' }}" href="{{ route('clients.contacts.index') }}">LIÊN HỆ</a>
     </li>
 
     {{-- KIỂM TRA ĐĂNG NHẬP ĐỂ GỌI ROUTE --}}
@@ -118,8 +136,7 @@
     <main>
         @yield('content')
     </main>
-
-    {{-- 8. FOOTER - LUXURY DARK ✅ --}}
+    
 <footer class="footer-premium">
     <div class="container">
         <div class="row g-5">
@@ -171,3 +188,28 @@
     </script>
 </body>
 </html>
+<script>
+    window.addEventListener('load', function() {
+        const loader = document.getElementById('global-loader');
+        if(loader) {
+            setTimeout(() => {
+                loader.classList.add('loader-hidden');
+            }, 1000); // 1s để khách nhìn thấy thương hiệu
+        }
+    });
+
+    document.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const target = this.getAttribute('href');
+            if (target && target !== '#' && !target.startsWith('#') && !this.hasAttribute('data-bs-toggle')) {
+                document.getElementById('global-loader').classList.remove('loader-hidden');
+            }
+        });
+    });
+
+    window.onpageshow = function(event) {
+        if (event.persisted) {
+            document.getElementById('global-loader').classList.add('loader-hidden');
+        }
+    };
+</script>

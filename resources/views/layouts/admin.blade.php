@@ -21,7 +21,7 @@
     
     <ul class="nav-admin">
         <li>
-            <a href="/admin" class="{{ request()->is('admin') ? 'active' : '' }}">
+            <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                 <i class="fas fa-chart-line"></i> Dashboard
             </a>
         </li>
@@ -41,10 +41,17 @@
             </a>
         </li>
         <li>
-            <a href="/admin/bookings" class="{{ request()->is('admin/bookings*') ? 'active' : '' }}">
+            <a href="{{ route('admin.bookings.index') }}" class="{{ request()->is('admin/bookings*') ? 'active' : '' }}">
                 <i class="fas fa-receipt"></i> Đơn đặt phòng
             </a>
         </li>
+
+        <li>
+            <a href="{{ route('admin.contacts.index') }}" class="{{ request()->is('admin/contacts*') ? 'active' : '' }}">
+                <i class="fas fa-envelope-open-text"></i> Liên hệ khách hàng
+            </a>
+        </li>
+
         <li class="mt-4 pt-3 border-top border-secondary border-opacity-25">
             <a href="/" target="_blank">
                 <i class="fas fa-external-link-alt"></i> Xem Website
@@ -70,7 +77,7 @@
                     <li><a class="dropdown-item py-2" href="#"><i class="fas fa-user-edit me-2"></i>Sửa hồ sơ</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li>
-                        <form action="/logout" method="POST">
+                        <form action="{{ route('logout') }}" method="POST">
                             @csrf
                             <button class="dropdown-item text-danger py-2" type="submit">
                                 <i class="fas fa-power-off me-2"></i>Đăng xuất

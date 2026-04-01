@@ -4,10 +4,12 @@ use App\Http\Controllers\Admin\AdminBookingController;
 use App\Http\Controllers\Admin\AdminHotelController;
 use App\Http\Controllers\Admin\AdminRoomController;
 use App\Http\Controllers\Admin\AdminTourController; 
+use App\Http\Controllers\Admin\ContactManagerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Client\BookingController;
+use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\HotelController;
 use Illuminate\Support\Facades\Route;
@@ -18,7 +20,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Tìm kiếm Tour/Khách sạn từ Search Box
-Route::get('/search', [HomeController::class, 'search'])->name('tours.search');
+// Route riêng cho trang kết quả tìm kiếm
+Route::get('/search', [App\Http\Controllers\Client\SearchController::class, 'index'])->name('client.search');
 
 // Danh sách và chi tiết
 Route::get('/hotels', [HotelController::class, 'index'])->name('hotels.index');
@@ -32,6 +35,8 @@ Route::get('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/register', [AuthController::class, 'handleRegister'])->name('register.post');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/lien-he', [ContactController::class, 'index'])->name('clients.contacts.index');
+Route::post('/lien-he', [ContactController::class, 'store'])->name('clients.contacts.store');
 
 
 // ================= BOOKING (Chỉ dành cho người dùng đã đăng nhập) =================
@@ -48,7 +53,7 @@ Route::middleware(['web'])->group(function () {
         ->name('admin.')
         ->middleware(['auth', 'isAdmin'])
         ->group(function () {
-
+            Route::resource('contacts', ContactManagerController::class)->only(['index', 'show', 'destroy']);
             // Dashboard thống kê
             Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
