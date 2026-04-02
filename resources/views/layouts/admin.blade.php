@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -7,9 +7,7 @@
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
-    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -26,17 +24,17 @@
             </a>
         </li>
         <li>
-            <a href="/admin/users" class="{{ request()->is('admin/users*') ? 'active' : '' }}">
+            <a href="{{ route('admin.users.index') }}" class="{{ request()->is('admin/users*') ? 'active' : '' }}">
                 <i class="fas fa-users"></i> Người dùng
             </a>
         </li>
         <li>
             <a href="{{ route('admin.hotels.index') }}" class="{{ request()->is('admin/hotels*') ? 'active' : '' }}">
-                <i class="fas fa-city"></i> Khách Sạn
+                <i class="fas fa-city"></i> Khách sạn
             </a>
         </li>
         <li>
-            <a href="/admin/rooms" class="{{ request()->is('admin/rooms*') ? 'active' : '' }}">
+            <a href="{{ route('admin.rooms.index') }}" class="{{ request()->is('admin/rooms*') ? 'active' : '' }}">
                 <i class="fas fa-hotel"></i> Phòng nghỉ
             </a>
         </li>
@@ -45,13 +43,16 @@
                 <i class="fas fa-receipt"></i> Đơn đặt phòng
             </a>
         </li>
-
+        <li>
+            <a href="{{ route('admin.reports.revenue') }}" class="{{ request()->is('admin/reports/revenue') ? 'active' : '' }}">
+                <i class="fas fa-sack-dollar"></i> Báo cáo doanh thu
+            </a>
+        </li>
         <li>
             <a href="{{ route('admin.contacts.index') }}" class="{{ request()->is('admin/contacts*') ? 'active' : '' }}">
                 <i class="fas fa-envelope-open-text"></i> Liên hệ khách hàng
             </a>
         </li>
-
         <li class="mt-4 pt-3 border-top border-secondary border-opacity-25">
             <a href="/" target="_blank">
                 <i class="fas fa-external-link-alt"></i> Xem Website
