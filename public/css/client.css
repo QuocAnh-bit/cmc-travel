@@ -70,10 +70,14 @@ h1, h2, h3, .navbar-brand {
     position: absolute;
     bottom: -5px; left: 50%;
     width: 0; height: 2px;
-    background: var(--primary);
     transition: var(--transition);
     transform: translateX(-50%);
 }
+
+.active {
+ color: green!important;
+}
+
 
 .nav-link:hover::after { width: 80%; }
 
