@@ -2,65 +2,75 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
 
 class AuthController extends Controller
 {
-    // FORM LOGIN
-    public function login(){
+    public function login()
+    {
         return view('auth.login');
     }
 
-    // XỬ LÝ LOGIN
-    public function handleLogin(Request $request){
-    $request->validate([
-        'email'=>'required|email',
-        'password'=>'required'
-    ]);
+    public function handleLogin(LoginRequest $request)
+    {
+        $credentials = $request->validated();
 
-    if(Auth::attempt($request->only('email','password'))){
+        if (Auth::attempt([
+            'email' => $credentials['email'],
+            'password' => $credentials['password'],
+            'status' => 'active',
+        ])) {
+            $request->session()->regenerate();
 
-        $request->session()->regenerate();
+            if (Auth::user()->role === 'admin') {
+                return redirect('/admin');
+            }
 
-        // phân quyền
-        if (Auth::user()->role === 'admin') {
-            return redirect('/admin');
+            return redirect('/');
         }
 
-        return redirect('/');
+        $user = User::where('email', $credentials['email'])->first();
+
+        if ($user && $user->status !== 'active' && Hash::check($credentials['password'], $user->password)) {
+            return back()
+                ->withInput($request->safe()->except('password'))
+                ->with('error', 'Tai khoan cua ban dang bi khoa.');
+        }
+
+        return back()
+            ->withInput($request->safe()->except('password'))
+            ->with('error', 'Sai email hoac mat khau.');
     }
 
-    return back()->with('error','Sai email hoặc mật khẩu');
-}
-
-    // FORM REGISTER
-    public function register(){
+    public function register()
+    {
         return view('auth.register');
     }
 
-    // XỬ LÝ REGISTER
-    public function handleRegister(Request $request){
-        $request->validate([
-            'name'=>'required',
-            'email'=>'required|email|unique:users',
-            'password'=>'required|min:6'
-        ]);
+    public function handleRegister(RegisterRequest $request)
+    {
+        $validated = $request->validated();
 
         User::create([
-            'name'=>$request->name,
-            'email'=>$request->email,
-            'password'=>Hash::make($request->password),
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
         ]);
 
-        return redirect('/login')->with('success','Đăng ký thành công');
+        return redirect('/login')->with('success', 'Dang ky thanh cong');
     }
 
-    // LOGOUT
-    public function logout(){
+    public function logout(Request $request)
+    {
         Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         return redirect('/');
     }
 }

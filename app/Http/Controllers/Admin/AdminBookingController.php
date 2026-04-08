@@ -3,21 +3,22 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\BookingIndexRequest;
 use App\Models\Booking;
-use Illuminate\Http\Request;
 
 class AdminBookingController extends Controller
 {
-    public function index(Request $request)
+    public function index(BookingIndexRequest $request)
     {
+        $filters = $request->validated();
         $query = Booking::with(['user', 'room.hotel'])->latest();
 
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
+        if (! empty($filters['status'])) {
+            $query->where('status', $filters['status']);
         }
 
-        if ($request->filled('keyword')) {
-            $keyword = trim($request->keyword);
+        if (! empty($filters['keyword'])) {
+            $keyword = $filters['keyword'];
 
             $query->where(function ($subQuery) use ($keyword) {
                 $subQuery->whereHas('user', function ($userQuery) use ($keyword) {
@@ -32,12 +33,12 @@ class AdminBookingController extends Controller
             });
         }
 
-        if ($request->filled('check_in_from')) {
-            $query->whereDate('check_in', '>=', $request->check_in_from);
+        if (! empty($filters['check_in_from'])) {
+            $query->whereDate('check_in', '>=', $filters['check_in_from']);
         }
 
-        if ($request->filled('check_in_to')) {
-            $query->whereDate('check_in', '<=', $request->check_in_to);
+        if (! empty($filters['check_in_to'])) {
+            $query->whereDate('check_in', '<=', $filters['check_in_to']);
         }
 
         $bookings = $query->paginate(12)->appends($request->query());
@@ -62,11 +63,19 @@ class AdminBookingController extends Controller
     {
         $booking = Booking::with('room')->findOrFail($id);
 
+        if ($booking->status === 'confirmed') {
+            return back()->with('error', 'Don dat phong nay da duoc xac nhan truoc do.');
+        }
+
         if ($booking->status === 'cancelled') {
             return back()->with('error', 'Khong the xac nhan don da huy.');
         }
 
-        if (! $booking->room || ! $booking->room->isAvailableFor(
+        if (! $booking->room || $booking->room->status !== 'available') {
+            return back()->with('error', 'Phong khong con o trang thai san sang de xac nhan.');
+        }
+
+        if (! $booking->room->isAvailableFor(
             $booking->check_in->toDateString(),
             $booking->check_out->toDateString(),
             $booking->id
@@ -104,7 +113,7 @@ class AdminBookingController extends Controller
         return redirect()->route('admin.bookings.index');
     }
 
-    public function store(Request $request)
+    public function store()
     {
         return redirect()->route('admin.bookings.index');
     }
@@ -114,7 +123,7 @@ class AdminBookingController extends Controller
         return redirect()->route('admin.bookings.show', $id);
     }
 
-    public function update(Request $request, $id)
+    public function update($id)
     {
         return redirect()->route('admin.bookings.show', $id);
     }

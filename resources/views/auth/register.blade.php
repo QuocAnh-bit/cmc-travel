@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Đăng ký tài khoản')
+@section('title', 'Dang ky tai khoan')
 
 @section('content')
 <div class="login-wrapper">
@@ -8,7 +8,7 @@
     <div class="login-left">
         <div class="brand-content">
             <h1>CMC Travel</h1>
-            <p>Bắt đầu hành trình của bạn ngay hôm nay</p>
+            <p>Bắt đầu hành trình của bạn ngày hôm nay</p>
         </div>
     </div>
 
@@ -19,13 +19,25 @@
             <form method="POST" action="{{ route('register.post') }}">
                 @csrf
                 
-                <input type="text" name="name" class="form-control" placeholder="Họ và tên" value="{{ old('name') }}" required>
+                <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" placeholder="Ho va ten" value="{{ old('name') }}" >
+                @error('name')
+                    <div class="text-danger small mt-1 mb-2">{{ $message }}</div>
+                @enderror
                 
-                <input type="email" name="email" class="form-control" placeholder="Email" value="{{ old('email') }}" required>
+                <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" placeholder="Email" value="{{ old('email') }}" >
+                @error('email')
+                    <div class="text-danger small mt-1 mb-2">{{ $message }}</div>
+                @enderror
                 
-                <input type="password" name="password" class="form-control" placeholder="Mật khẩu" required>
+                <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" placeholder="Mat khau" >
+                @error('password')
+                    <div class="text-danger small mt-1 mb-2">{{ $message }}</div>
+                @enderror
                 
-                <input type="password" name="password_confirmation" class="form-control" placeholder="Xác nhận mật khẩu" required>
+                <input type="password" name="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror" placeholder="Xac nhan mat khau" >
+                @error('password_confirmation')
+                    <div class="text-danger small mt-1 mb-2">{{ $message }}</div>
+                @enderror
 
                 <button type="submit" class="btn btn-primary mt-2">Đăng ký ngay</button>
             </form>

@@ -3,45 +3,42 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Client\ContactStoreRequest;
 use App\Models\Contact;
 use App\Models\Hotel;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ContactController extends Controller
 {
     public function index()
     {
         $hotels = Hotel::all();
-        return view('clients.contacts.index',compact('hotels'));
+
+        return view('clients.contacts.index', compact('hotels'));
     }
 
-    public function store(Request $request)
-{
-    // 1. Kiểm tra dữ liệu
-    $request->validate([
-        'name' => 'required',
-        'email' => 'required|email',
-        'message' => 'required',
-    ]);
+    public function store(ContactStoreRequest $request)
+    {
+        $validated = $request->validated();
 
-    // 2. Thử lưu và kiểm tra kết quả
-    try {
-        $contact = \App\Models\Contact::create([
-            'name'    => $request->name,
-            'email'   => $request->email,
-            'subject' => $request->subject,
-            'message' => $request->message,
-            'status'  => 'new',
-        ]);
+        try {
+            Contact::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'subject' => $validated['subject'] ?: null,
+                'message' => $validated['message'],
+                'status' => 'new',
+            ]);
 
-        if ($contact) {
-            return redirect()->back()->with('success', 'Gửi tin nhắn thành công!');
+            return back()->with('success', 'Gui tin nhan thanh cong!');
+        } catch (\Throwable $exception) {
+            Log::error('Contact form submission failed', [
+                'error' => $exception->getMessage(),
+            ]);
+
+            return back()
+                ->withInput()
+                ->with('error', 'Khong the luu du lieu. Vui long thu lai sau.');
         }
-    } catch (\Exception $e) {
-        // Nếu lỗi database (ví dụ thiếu cột), nó sẽ hiện ở đây
-        dd($e->getMessage()); 
     }
-
-    return redirect()->back()->with('error', 'Không thể lưu dữ liệu.');
-}
 }

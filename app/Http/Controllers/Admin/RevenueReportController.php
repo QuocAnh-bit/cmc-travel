@@ -3,16 +3,18 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\RevenueReportRequest;
 use App\Models\Booking;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 
 class RevenueReportController extends Controller
 {
-    public function index(Request $request)
+    public function index(RevenueReportRequest $request)
     {
-        $startDate = $request->input('start_date', now()->startOfMonth()->toDateString());
-        $endDate = $request->input('end_date', now()->toDateString());
+        $validated = $request->validated();
+        $startDate = $validated['start_date'] ?? now()->startOfMonth()->toDateString();
+        $endDate = $validated['end_date'] ?? now()->toDateString();
+        $hotelKeyword = $validated['hotel_keyword'] ?? '';
 
         $bookingsQuery = Booking::with(['user', 'room.hotel'])
             ->where('status', 'confirmed')
@@ -20,11 +22,9 @@ class RevenueReportController extends Controller
             ->whereDate('created_at', '<=', $endDate)
             ->latest();
 
-        if ($request->filled('hotel_keyword')) {
-            $keyword = trim($request->hotel_keyword);
-
-            $bookingsQuery->whereHas('room.hotel', function ($hotelQuery) use ($keyword) {
-                $hotelQuery->where('name', 'like', "%{$keyword}%");
+        if ($hotelKeyword !== '') {
+            $bookingsQuery->whereHas('room.hotel', function ($hotelQuery) use ($hotelKeyword) {
+                $hotelQuery->where('name', 'like', "%{$hotelKeyword}%");
             });
         }
 
@@ -41,7 +41,7 @@ class RevenueReportController extends Controller
             ->values();
 
         $hotelRevenue = $reportBookings
-            ->groupBy(fn ($booking) => $booking->room?->hotel?->name ?? 'Khách sạn không xác định')
+            ->groupBy(fn ($booking) => $booking->room?->hotel?->name ?? 'Khach san khong xac dinh')
             ->map(fn ($items, $hotel) => [
                 'hotel' => $hotel,
                 'total' => (int) $items->sum('total_price'),
@@ -69,7 +69,7 @@ class RevenueReportController extends Controller
             'filters' => [
                 'start_date' => $startDate,
                 'end_date' => $endDate,
-                'hotel_keyword' => $request->input('hotel_keyword', ''),
+                'hotel_keyword' => $hotelKeyword,
             ],
         ]);
     }

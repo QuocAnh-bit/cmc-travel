@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreUserRequest;
+use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -22,24 +23,9 @@ class UserController extends Controller
         return view('admin.users.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-            'role' => 'required|in:user,admin',
-        ], [
-            'name.required' => 'Vui long nhap ho va ten.',
-            'email.required' => 'Vui long nhap email.',
-            'email.email' => 'Email khong dung dinh dang.',
-            'email.unique' => 'Email nay da ton tai.',
-            'password.required' => 'Vui long nhap mat khau.',
-            'password.min' => 'Mat khau phai co it nhat 8 ky tu.',
-            'role.required' => 'Vui long chon vai tro.',
-            'role.in' => 'Vai tro khong hop le.',
-        ]);
-
+        $validated = $request->validated();
         $validated['password'] = Hash::make($validated['password']);
         $validated['status'] = 'active';
 
@@ -55,24 +41,14 @@ class UserController extends Controller
         return view('admin.users.edit', compact('user'));
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateUserRequest $request, $id)
     {
         $user = User::findOrFail($id);
+        $validated = $request->validated();
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'role' => 'required|in:user,admin',
-            'password' => 'nullable|string|min:8',
-        ], [
-            'name.required' => 'Vui long nhap ho va ten.',
-            'email.required' => 'Vui long nhap email.',
-            'email.email' => 'Email khong dung dinh dang.',
-            'email.unique' => 'Email nay da ton tai.',
-            'password.min' => 'Mat khau phai co it nhat 8 ky tu.',
-            'role.required' => 'Vui long chon vai tro.',
-            'role.in' => 'Vai tro khong hop le.',
-        ]);
+        if ($user->id === Auth::id() && $user->role === 'admin' && $validated['role'] !== 'admin' && ! $this->hasAnotherAdmin($user->id)) {
+            return back()->withInput()->with('error', 'Khong the ha quyen admin cuoi cung.');
+        }
 
         $user->name = $validated['name'];
         $user->email = $validated['email'];
@@ -90,6 +66,15 @@ class UserController extends Controller
     public function toggleStatus($id)
     {
         $user = User::findOrFail($id);
+
+        if (Auth::id() === $user->id) {
+            return back()->with('error', 'Ban khong the tu khoa tai khoan cua minh!');
+        }
+
+        if ($user->role === 'admin' && $user->status === 'active' && ! $this->hasAnotherActiveAdmin($user->id)) {
+            return back()->with('error', 'Khong the khoa admin dang la tai khoan quan tri cuoi cung.');
+        }
+
         $user->status = $user->status === 'active' ? 'blocked' : 'active';
         $user->save();
 
@@ -104,8 +89,27 @@ class UserController extends Controller
             return back()->with('error', 'Ban khong the tu xoa chinh minh!');
         }
 
+        if ($user->role === 'admin' && ! $this->hasAnotherAdmin($user->id)) {
+            return back()->with('error', 'Khong the xoa admin cuoi cung trong he thong!');
+        }
+
         $user->delete();
 
         return back()->with('success', 'Da xoa nguoi dung thanh cong!');
+    }
+
+    private function hasAnotherAdmin(int $ignoreUserId): bool
+    {
+        return User::where('role', 'admin')
+            ->whereKeyNot($ignoreUserId)
+            ->exists();
+    }
+
+    private function hasAnotherActiveAdmin(int $ignoreUserId): bool
+    {
+        return User::where('role', 'admin')
+            ->where('status', 'active')
+            ->whereKeyNot($ignoreUserId)
+            ->exists();
     }
 }
