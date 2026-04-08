@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Client\CheckRoomAvailabilityRequest;
+use App\Http\Requests\Client\StoreBookingRequest;
 use App\Models\Booking;
 use App\Models\Hotel;
 use App\Models\Room;
@@ -35,17 +37,19 @@ class BookingController extends Controller
         return redirect()->route('hotels.index');
     }
 
-    public function store(Request $request)
+    public function store(StoreBookingRequest $request)
     {
-        $validated = $request->validate([
-            'room_id' => ['required', 'exists:rooms,id'],
-            'check_in' => ['required', 'date', 'after_or_equal:today'],
-            'check_out' => ['required', 'date', 'after:check_in'],
-        ]);
+        $validated = $request->validated();
 
         $room = Room::with('hotel')->findOrFail($validated['room_id']);
         $checkIn = Carbon::parse($validated['check_in'])->startOfDay();
         $checkOut = Carbon::parse($validated['check_out'])->startOfDay();
+
+        if ($room->status !== 'available') {
+            return back()
+                ->withInput()
+                ->withErrors(['room_id' => 'Phòng này hiện không ở trạng thái sẵn sàng để đặt.']);
+        }
 
         if (! $room->isAvailableFor($checkIn->toDateString(), $checkOut->toDateString())) {
             return back()
@@ -95,12 +99,13 @@ class BookingController extends Controller
         return $this->cancel($booking);
     }
 
-    public function availability(Request $request, Room $room)
+    public function availability(CheckRoomAvailabilityRequest $request, Room $room)
     {
-        $validated = $request->validate([
-            'check_in' => ['required', 'date', 'after_or_equal:today'],
-            'check_out' => ['required', 'date', 'after:check_in'],
-        ]);
+        $validated = $request->validated();
+
+        if ($room->status !== 'available') {
+            return back()->with('error', 'Phòng này hiện không ở trạng thái sẵn sàng để đặt.');
+        }
 
         $isAvailable = $room->isAvailableFor($validated['check_in'], $validated['check_out']);
 

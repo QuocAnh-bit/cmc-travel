@@ -75,7 +75,7 @@
         <h5 class="fw-bold mb-3"><i class="fas fa-search me-2 text-primary"></i>Tìm khách sạn giá tốt</h5>
         
         {{-- 1. Thêm action trỏ đến route danh sách khách sạn --}}
-       <form action="{{ route('client.search') }}" method="GET" class="row g-3 align-items-end">
+       <form action="{{ route('client.search') }}" method="GET" class="row g-3 align-items-end">`r`n            @if($errors->has('search'))`r`n                <div class="col-12 text-danger small">{{ $errors->first('search') }}</div>`r`n            @endif
             <div class="col-lg-7">
                 <label class="small fw-bold text-muted mb-1 text-uppercase">Địa điểm</label>
                 <div class="input-group border rounded-3 p-2">
@@ -83,7 +83,7 @@
                     
                     {{-- 2. Quan trọng: Thêm name="search" và value để giữ từ khóa sau khi tìm --}}
                     <input type="text" name="search" value="{{ request('search') }}" 
-                           class="form-control border-0" 
+                           class="form-control border-0 @error('search') is-invalid @enderror" 
                            placeholder="Thành phố, địa danh, khách sạn...">
                 </div>
             </div>
@@ -305,3 +305,4 @@
     });
 </script>
 @endsection
+

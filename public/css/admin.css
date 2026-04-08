@@ -1,123 +1,220 @@
-/* Biến màu sắc chủ đạo */
+/* ============================================================
+   CLEAN & LUXURY SIDEBAR SYSTEM (No Conflicts)
+   ============================================================ */
+
 :root {
-    --sidebar-bg: #222e3c;
-    --primary-color: #4e73df;
-    --bg-light: #f4f7f6;
-    --text-muted: rgba(255, 255, 255, 0.6);
-    --transition: all 0.3s ease;
+    --sb-bg: #050505;
+    --sb-width: 270px; /* Thống nhất chiều rộng */
+    --sb-gold: #d4af37;
+    --sb-gold-glow: rgba(212, 175, 55, 0.25);
+    --sb-text-muted: #8e8e93;
+    --sb-transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    --bg-light: #f4f7f6; /* Nền cho phần content */
 }
 
-body {
-    font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: var(--bg-light);
-    margin: 0;
-}
-
-/* Sidebar */
+/* Sidebar Body */
 .sidebar {
-    width: 260px;
+    width: var(--sb-width);
     height: 100vh;
-    background: var(--sidebar-bg);
     position: fixed;
-    left: 0;
-    top: 0;
-    transition: var(--transition);
-    z-index: 1000;
+    left: 0; top: 0;
+    background: var(--sb-bg);
+    border-right: 1px solid rgba(255, 255, 255, 0.04);
+    padding: 2rem 1rem;
+    z-index: 1001;
+    box-shadow: 15px 0 50px rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    transition: var(--sb-transition);
 }
 
+/* Header & Logo */
 .sidebar-header {
-    padding: 25px;
-    text-align: center;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding: 0 0 3rem 1rem;
+    border: none; /* Bỏ border bottom cũ */
 }
 
 .sidebar-header h4 {
-    color: #fff;
-    font-weight: 700;
-    margin: 0;
-    letter-spacing: 1px;
+    font-weight: 900;
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    background: linear-gradient(135deg, #fff 0%, var(--sb-gold) 50%, #fff 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: goldShimmer 5s linear infinite;
 }
 
+/* Nav List */
 .nav-admin {
-    padding: 20px 0;
     list-style: none;
+    padding: 0;
     margin: 0;
+    flex-grow: 1;
 }
 
 .nav-admin li {
-    padding: 2px 15px;
+    padding: 0; /* Reset padding li cũ */
+    margin-bottom: 8px;
 }
 
 .nav-admin a {
-    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    padding: 14px 18px;
+    color: var(--sb-text-muted);
     text-decoration: none;
-    display: flex;
-    align-items: center;
-    padding: 12px 15px;
-    border-radius: 8px;
+    font-size: 0.95rem;
     font-weight: 500;
-    transition: var(--transition);
+    border-radius: 14px;
+    transition: var(--sb-transition);
+    border: 1px solid transparent;
 }
 
-.nav-admin a i {
-    width: 25px;
-    font-size: 1.1rem;
-    margin-right: 10px;
-}
-
-/* Hiệu ứng Hover & Active */
-.nav-admin a:hover, 
-.nav-admin a.active {
-    background: rgba(255, 255, 255, 0.1);
+/* Hover & Active */
+.nav-admin a:hover {
     color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+    padding-left: 22px;
 }
 
 .nav-admin a.active {
-    background: var(--primary-color);
-    box-shadow: 0 4px 12px rgba(78, 115, 223, 0.3);
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(0, 0, 0, 0) 100%) !important;
+    color: var(--sb-gold) !important;
+    border: 1px solid rgba(212, 175, 55, 0.3) !important;
+    box-shadow: 0 10px 20px -5px var(--sb-gold-glow);
 }
 
-/* Main Content Area */
+/* Fix Main Wrapper lệch */
 .main-wrapper {
-    margin-left: 260px;
+    margin-left: var(--sb-width); /* Khớp hoàn toàn với Sidebar */
     min-height: 100vh;
+    background-color: var(--bg-light);
+    transition: var(--sb-transition);
 }
 
-.topbar {
-    background: #fff;
-    height: 70px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 0 30px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-}
-
-.content-body {
-    padding: 30px;
-}
-
-/* Card Styling */
-.card {
-    border: none !important;
-    border-radius: 15px !important;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.05) !important;
-    transition: transform 0.3s ease;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-}
-
-/* Responsive cho Mobile */
+/* Responsive Fix */
 @media (max-width: 992px) {
     .sidebar {
-        left: -260px;
+        left: calc(-1 * var(--sb-width));
     }
     .main-wrapper {
         margin-left: 0;
     }
     .sidebar.show {
         left: 0;
+    }
+}
+
+@keyframes goldShimmer {
+    to { background-position: 200% center; }
+}
+/* ============================================================
+   PREMIUM GLASS TOPBAR - PORCELAIN EDITION
+   ============================================================ */
+
+:root {
+    --tp-height: 80px;
+    --tp-bg: rgba(255, 255, 255, 0.8); /* Trắng mờ */
+    --tp-border: rgba(0, 0, 0, 0.05);
+    --tp-text: #1a1a1a;
+    --tp-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    --accent-gold: #d4af37;
+}
+
+.topbar {
+    height: var(--tp-height);
+    background: var(--tp-bg);
+    /* Hiệu ứng kính mờ (Chỉ hoạt động trên trình duyệt hiện đại) */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    
+    border-bottom: 1px solid var(--tp-border);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Đẩy user info sang phải */
+    padding: 0 40px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: var(--tp-shadow);
+    transition: all 0.3s ease;
+    height: 100px;
+}
+
+/* Hiệu ứng khi scroll (nếu bạn dùng JS để add class) */
+.topbar.scrolled {
+    height: 65px;
+    background: rgba(255, 255, 255, 0.95);
+}
+
+/* User Info Section */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+    padding: 8px 15px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.user-info:hover {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.user-info span {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--tp-text);
+    letter-spacing: 0.3px;
+}
+
+/* Avatar tròn có viền Gold */
+.user-info img {
+    width: 42px !important;
+    height: 42px !important;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid var(--accent-gold);
+    padding: 2px;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.user-info:hover img {
+    transform: rotate(5deg) scale(1.05);
+}
+
+/* Dropdown Menu (Nếu có) */
+.dropdown-menu {
+    border: none !important;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15) !important;
+    border-radius: 15px !important;
+    padding: 10px !important;
+    margin-top: 15px !important;
+    background: #ffffff !important;
+}
+
+.dropdown-item {
+    border-radius: 10px !important;
+    padding: 10px 15px !important;
+    font-weight: 500 !important;
+    color: #4a5568 !important;
+    transition: all 0.2s !important;
+}
+
+.dropdown-item:hover {
+    background: #f8f9fa !important;
+    color: var(--accent-gold) !important;
+    padding-left: 20px !important;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .topbar {
+        padding: 0 20px;
+        justify-content: space-between; /* Để chỗ cho nút menu mobile bên trái */
     }
 }
