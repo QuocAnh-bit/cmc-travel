@@ -13,7 +13,11 @@ use App\Http\Controllers\Client\BookingController;
 use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\HotelController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+
+
+
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/search', [App\Http\Controllers\Client\SearchController::class, 'index'])->name('client.search');
@@ -32,6 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/rooms/{room}/availability', [BookingController::class, 'availability'])->name('rooms.availability');
     Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
     Route::resource('bookings', BookingController::class);
+    Route::resource('profile', ProfileController::class);
 });
 
 Route::middleware(['web'])->group(function () {

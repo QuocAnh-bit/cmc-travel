@@ -33,7 +33,7 @@
                     </div>
                 </form>
 
-                @if($checkIn && $checkOut)
+                @if($checkIn && $checkOut && empty(session('error')))
                     <div class="alert alert-info border-0 rounded-4 mt-4 mb-0">
                         Kết quả kiểm tra từ <strong>{{ \Carbon\Carbon::parse($checkIn)->format('d/m/Y') }}</strong>
                         đến <strong>{{ \Carbon\Carbon::parse($checkOut)->format('d/m/Y') }}</strong>:
