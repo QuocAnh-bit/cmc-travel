@@ -1,117 +1,104 @@
 @extends('layouts.admin')
 
-@section('title', 'Thêm phòng nghỉ mới')
+@section('title', 'Th�m ph�ng ngh? m?i')
 
 @section('content')
 <div class="container-fluid px-4 py-4">
     <div class="row justify-content-center">
         <div class="col-lg-10">
             <div class="card border-0 shadow-sm" style="border-radius: 15px text-decoration-none;">
-                {{-- Card Header --}}
                 <div class="card-header bg-white py-3 border-bottom-0">
-                    <h5 class="mb-0 fw-bold text-primary">
-                        <i class="fas fa-plus-circle me-2"></i>Thêm phòng nghỉ mới
-                    </h5>
+                    <h5 class="mb-0 fw-bold text-primary"><i class="fas fa-plus-circle me-2"></i>Th�m ph�ng ngh? m?i</h5>
                 </div>
 
                 <div class="card-body p-4">
                     <form action="{{ route('admin.rooms.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        
                         <div class="row">
-                            {{-- Tên phòng --}}
                             <div class="col-md-12 mb-3">
-                                <label class="form-label fw-bold text-secondary">Tên phòng nghỉ <span class="text-danger">*</span></label>
-                                <input type="text" name="name" class="form-control form-control-lg fs-6 @error('name') is-invalid @enderror" 
-                                       placeholder="Ví dụ: Phòng Deluxe hướng biển" value="{{ old('name') }}" required>
-                                @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                <label class="form-label fw-bold text-secondary">T�n ph�ng ngh? <span class="text-danger">*</span></label>
+                                <input type="text" name="name" class="form-control form-control-lg fs-6 @error('name') is-invalid @enderror" placeholder="V� d?: Ph�ng Deluxe hu?ng bi?n" value="{{ old('name') }}" required>
+                                @error('name') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                             </div>
 
-                            {{-- Chọn Khách sạn & Giá --}}
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold text-secondary">Chọn Khách sạn (Danh mục) <span class="text-danger">*</span></label>
+                                <label class="form-label fw-bold text-secondary">Ch?n kh�ch s?n <span class="text-danger">*</span></label>
                                 <select name="hotel_id" class="form-select @error('hotel_id') is-invalid @enderror" required>
-                                    <option value="">-- Chọn khách sạn sở hữu --</option>
+                                    <option value="">-- Ch?n kh�ch s?n s? h?u --</option>
                                     @foreach($hotels as $hotel)
-                                        <option value="{{ $hotel->id }}" {{ old('hotel_id') == $hotel->id ? 'selected' : '' }}>
-                                            {{ $hotel->name }}
-                                        </option>
+                                        <option value="{{ $hotel->id }}" {{ old('hotel_id') == $hotel->id ? 'selected' : '' }}>{{ $hotel->name }}</option>
                                     @endforeach
                                 </select>
-                                @error('hotel_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                @error('hotel_id') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold text-secondary">Giá mỗi đêm (VNĐ) <span class="text-danger">*</span></label>
+                                <label class="form-label fw-bold text-secondary">Gi� m?i d�m (VN�) <span class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <input type="number" name="price" class="form-control @error('price') is-invalid @enderror" 
-                                           placeholder="Ví dụ: 750000" value="{{ old('price') }}" required>
-                                    <span class="input-group-text">đ</span>
+                                    <input type="number" name="price" class="form-control @error('price') is-invalid @enderror" placeholder="V� d?: 750000" value="{{ old('price') }}" required>
+                                    <span class="input-group-text">d</span>
                                 </div>
-                                @error('price') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                @error('price') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                             </div>
 
-                            {{-- MÔ TẢ CHI TIẾT (Bổ sung mới) --}}
-                            <div class="col-12 mb-4">
-                                <label class="form-label fw-bold text-secondary">Mô tả chi tiết phòng nghỉ</label>
-                                <textarea name="description" id="editor_create" class="form-control" rows="6" 
-                                          placeholder="Giới thiệu chi tiết về diện tích, nội thất, view phòng...">{{ old('description') }}</textarea>
-                                <div class="form-text mt-2 text-muted">
-                                    <i class="fas fa-info-circle me-1"></i> Một mô tả chi tiết sẽ giúp khách hàng dễ dàng đưa ra quyết định đặt phòng hơn.
-                                </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold text-secondary">Gi?m gi� (%)</label>
+                                <input type="number" name="discount" class="form-control @error('discount') is-invalid @enderror" min="0" max="100" value="{{ old('discount', 0) }}">
+                                @error('discount') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                             </div>
 
-                            {{-- Tiện nghi --}}
                             <div class="col-12 mb-4">
-                                <label class="form-label fw-bold text-secondary">Tiện nghi có sẵn</label>
-                                <div class="d-flex flex-wrap gap-3 p-3 border rounded-3 bg-light shadow-sm">
-                                    @php 
-                                        $amenities_list = ['Wifi', 'Điều hòa', 'Tivi', 'Tủ lạnh', 'Ban công', 'Bồn tắm', 'Ăn sáng'];
-                                    @endphp
+                                <label class="form-label fw-bold text-secondary">M� t? chi ti?t ph�ng ngh?</label>
+                                <textarea name="description" id="editor_create" class="form-control @error('description') is-invalid @enderror" rows="6" placeholder="Gi?i thi?u chi ti?t v? di?n t�ch, n?i th?t, view ph�ng...">{{ old('description') }}</textarea>
+                                @error('description') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                            </div>
+
+                            <div class="col-12 mb-4">
+                                <label class="form-label fw-bold text-secondary">Ti?n nghi c� s?n</label>
+                                <div class="d-flex flex-wrap gap-3 p-3 border rounded-3 bg-light shadow-sm @error('amenities') border-danger @enderror">
+                                    @php $amenities_list = ['Wifi', '�i?u h�a', 'Tivi', 'T? l?nh', 'Ban c�ng', 'B?n t?m', 'An s�ng']; @endphp
                                     @foreach($amenities_list as $item)
                                     <div class="form-check me-2">
-                                        <input class="form-check-input" type="checkbox" name="amenities[]" 
-                                               value="{{ $item }}" id="amenity_{{ $loop->index }}"
-                                               {{ is_array(old('amenities')) && in_array($item, old('amenities')) ? 'checked' : '' }}>
-                                        <label class="form-check-label text-dark" for="amenity_{{ $loop->index }}">
-                                            {{ $item }}
-                                        </label>
+                                        <input class="form-check-input" type="checkbox" name="amenities[]" value="{{ $item }}" id="amenity_{{ $loop->index }}" {{ is_array(old('amenities')) && in_array($item, old('amenities')) ? 'checked' : '' }}>
+                                        <label class="form-check-label text-dark" for="amenity_{{ $loop->index }}">{{ $item }}</label>
                                     </div>
                                     @endforeach
                                 </div>
+                                @error('amenities') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                                @error('amenities.*') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                             </div>
 
-                            {{-- Hình ảnh --}}
                             <div class="col-md-6 mb-4">
-                                <label class="form-label fw-bold text-secondary">Hình ảnh đại diện phòng</label>
+                                <label class="form-label fw-bold text-secondary">H�nh ?nh d?i di?n ph�ng</label>
                                 <input type="file" name="image" class="form-control @error('image') is-invalid @enderror">
-                                @error('image') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                @error('image') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                             </div>
 
-                            {{-- Trạng thái & Nổi bật --}}
                             <div class="col-md-6 mb-4">
-                                <label class="form-label fw-bold text-secondary">Tùy chọn hiển thị</label>
-                                <div class="d-flex gap-4 align-items-center h-75 p-2 border rounded bg-white">
+                                <label class="form-label fw-bold text-secondary">T�y ch?n hi?n th?</label>
+                                <div class="d-flex gap-4 align-items-center h-75 p-2 border rounded bg-white @error('status') border-danger @enderror">
                                     <div class="form-check form-switch ms-3">
                                         <input class="form-check-input" type="checkbox" name="is_featured" value="1" id="switchFeatured" {{ old('is_featured') ? 'checked' : '' }}>
-                                        <label class="form-check-label fw-semibold" for="switchFeatured">Phòng nổi bật</label>
+                                        <label class="form-check-label fw-semibold" for="switchFeatured">Ph�ng n?i b?t</label>
                                     </div>
                                     <div class="vr"></div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="status" id="statusAvail" value="available" checked>
-                                        <label class="form-check-label" for="statusAvail">Sẵn sàng</label>
+                                        <input class="form-check-input" type="radio" name="status" id="statusAvail" value="available" {{ old('status', 'available') === 'available' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="statusAvail">S?n s�ng</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="status" id="statusBooked" value="booked" {{ old('status') === 'booked' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="statusBooked">�� d?t</label>
                                     </div>
                                 </div>
+                                @error('status') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                             </div>
                         </div>
 
-                        {{-- Footer Buttons --}}
                         <hr class="my-4 opacity-25">
                         <div class="d-flex justify-content-end gap-3">
-                            <a href="{{ route('admin.rooms.index') }}" class="btn btn-light px-4 border shadow-sm">Hủy bỏ</a>
-                            <button type="submit" class="btn btn-primary px-5 shadow">
-                                <i class="fas fa-save me-2"></i>Lưu phòng nghỉ
-                            </button>
+                            <a href="{{ route('admin.rooms.index') }}" class="btn btn-light px-4 border shadow-sm">H?y b?</a>
+                            <button type="submit" class="btn btn-primary px-5 shadow"><i class="fas fa-save me-2"></i>Luu ph�ng ngh?</button>
                         </div>
                     </form>
                 </div>
@@ -121,16 +108,11 @@
 </div>
 @endsection
 
-{{-- Script để tích hợp bộ soạn thảo CKEditor 5 --}}
 @section('scripts')
 <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
 <script>
-    ClassicEditor
-        .create(document.querySelector('#editor_create'), {
-            toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote' ]
-        })
-        .catch(error => {
-            console.error(error);
-        });
+    ClassicEditor.create(document.querySelector('#editor_create'), {
+        toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote']
+    }).catch(error => console.error(error));
 </script>
 @endsection

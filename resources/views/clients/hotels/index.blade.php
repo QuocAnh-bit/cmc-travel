@@ -58,17 +58,22 @@
             <div class="row g-4">
                @forelse($hotels as $hotel)
     @php
-        // Lấy phòng có giá thấp nhất để hiển thị làm đại diện
+        // Lấy phòng có giá thấp nhất
         $representativeRoom = $hotel->rooms->sortBy('price')->first();
     @endphp
 
     <div class="col-md-6 col-xl-4">
         <div class="hotel-card-premium bg-white h-100 rounded-4 overflow-hidden border shadow-hover transition">
             
-            {{-- Hiển thị ảnh của PHÒNG --}}
+            {{-- Hiển thị ảnh - Đã thêm kiểm tra null (?->) --}}
             <div class="position-relative overflow-hidden" style="height: 200px;">
-                <img src="{{ Str::startsWith($representativeRoom->image, 'http') ? $representativeRoom->image : asset('storage/' . $representativeRoom->image) }}" 
-     class="w-100 h-100 object-fit-cover transition-scale">
+                @if($representativeRoom && $representativeRoom->image)
+                    <img src="{{ Str::startsWith($representativeRoom->image, 'http') ? $representativeRoom->image : asset('storage/' . $representativeRoom->image) }}" 
+                         class="w-100 h-100 object-fit-cover transition-scale">
+                @else
+                    {{-- Ảnh mặc định nếu không có phòng hoặc không có ảnh --}}
+                    <img src="{{ asset('images/default-hotel.jpg') }}" class="w-100 h-100 object-fit-cover">
+                @endif
             </div>
 
             <div class="p-4">
@@ -82,8 +87,12 @@
                     <div>
                         <small class="text-muted d-block">Giá chỉ từ</small>
                         <span class="fw-bold text-danger fs-5">
-                            {{-- Hiển thị giá thấp nhất của khách sạn --}}
-                            {{ number_format($representativeRoom->price ?? 0) }}đ
+                            {{-- Kiểm tra nếu có phòng thì hiện giá, không thì hiện 'Liên hệ' --}}
+                            @if($representativeRoom)
+                                {{ number_format($representativeRoom->price) }}đ
+                            @else
+                                Liên hệ
+                            @endif
                         </span>
                     </div>
                     <a href="{{ route('hotels.show', $hotel->id) }}" class="btn btn-outline-primary rounded-pill px-4 fw-bold btn-sm">
@@ -94,7 +103,9 @@
         </div>
     </div>
 @empty
-    <p>Không tìm thấy khách sạn nào.</p>
+    <div class="col-12 text-center py-5">
+        <p class="text-muted">Không tìm thấy khách sạn nào.</p>
+    </div>
 @endforelse
             </div>
 

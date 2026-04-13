@@ -48,11 +48,11 @@ Route::middleware(['web'])->group(function () {
             Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
             Route::get('reports/revenue', [RevenueReportController::class, 'index'])->name('reports.revenue');
 
-            Route::resource('users', UserController::class);
+            Route::resource('users', UserController::class)->except(['show']);
             Route::post('users/{id}/toggle', [UserController::class, 'toggleStatus'])->name('users.toggle');
 
             Route::resource('rooms', AdminRoomController::class);
-            Route::resource('hotels', AdminHotelController::class);
+            Route::resource('hotels', AdminHotelController::class)->only(['index', 'store', 'destroy']);
             Route::resource('bookings', AdminBookingController::class);
             Route::post('bookings/{id}/confirm', [AdminBookingController::class, 'confirm'])->name('bookings.confirm');
             Route::post('bookings/{id}/cancel', [AdminBookingController::class, 'cancel'])->name('bookings.cancel');
