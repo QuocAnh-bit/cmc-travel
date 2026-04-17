@@ -1,0 +1,43 @@
+[33m35852ca[m[33m ([m[1;36mHEAD[m[33m)[m HEAD@{0}: pull origin dqa-dev --rebase (pick): update client css cmc travel
+[33m9d291f5[m HEAD@{1}: pull origin dqa-dev --rebase (pick): update Dashboard css cmc travel
+[33md930609[m HEAD@{2}: pull origin dqa-dev --rebase (pick): fix chon ngay
+[33me3d31cd[m[33m ([m[1;31morigin/dqa-dev[m[33m)[m HEAD@{3}: pull origin dqa-dev --rebase (start): checkout e3d31cdf8d59146cf0cae7f9b5b060fd5a2b1400
+[33m45a4de6[m[33m ([m[1;32mdqa-dev[m[33m)[m HEAD@{4}: commit: vn_pay
+[33md7b94ce[m HEAD@{5}: rebase (finish): returning to refs/heads/dqa-dev
+[33md7b94ce[m HEAD@{6}: rebase (pick): update giao dien
+[33m1043cd2[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m HEAD@{7}: rebase (start): checkout origin/main
+[33me3d31cd[m[33m ([m[1;31morigin/dqa-dev[m[33m)[m HEAD@{8}: reset: moving to HEAD
+[33me3d31cd[m[33m ([m[1;31morigin/dqa-dev[m[33m)[m HEAD@{9}: pull origin main: updating HEAD
+[33me3d31cd[m[33m ([m[1;31morigin/dqa-dev[m[33m)[m HEAD@{10}: merge origin/main: updating HEAD
+[33me3d31cd[m[33m ([m[1;31morigin/dqa-dev[m[33m)[m HEAD@{11}: checkout: moving from dqa-dev to dqa-dev
+[33me3d31cd[m[33m ([m[1;31morigin/dqa-dev[m[33m)[m HEAD@{12}: checkout: moving from main to dqa-dev
+[33m1043cd2[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m HEAD@{13}: commit (merge): resolve merge conflict
+[33mb5a8b66[m HEAD@{14}: checkout: moving from dqa-dev to main
+[33me3d31cd[m[33m ([m[1;31morigin/dqa-dev[m[33m)[m HEAD@{15}: checkout: moving from main to dqa-dev
+[33mb5a8b66[m HEAD@{16}: checkout: moving from dqa-dev to main
+[33me3d31cd[m[33m ([m[1;31morigin/dqa-dev[m[33m)[m HEAD@{17}: checkout: moving from main to dqa-dev
+[33mb5a8b66[m HEAD@{18}: checkout: moving from dqa-dev to main
+[33me3d31cd[m[33m ([m[1;31morigin/dqa-dev[m[33m)[m HEAD@{19}: checkout: moving from main to dqa-dev
+[33mb5a8b66[m HEAD@{20}: rebase (finish): returning to refs/heads/main
+[33mb5a8b66[m HEAD@{21}: rebase (finish): refs/heads/main onto 4e5bcacdadcb2b069f743518c575768428280031
+[33mb5a8b66[m HEAD@{22}: checkout: moving from e66bb66d15a642cc4912fd0c435d28b4dcfb9192 to main
+[33me66bb66[m HEAD@{23}: commit: resolve conflict
+[33m4e5bcac[m HEAD@{24}: pull --rebase origin main (start): checkout 4e5bcacdadcb2b069f743518c575768428280031
+[33mb5a8b66[m HEAD@{25}: checkout: moving from dqa-dev to main
+[33me3d31cd[m[33m ([m[1;31morigin/dqa-dev[m[33m)[m HEAD@{26}: checkout: moving from main to dqa-dev
+[33mb5a8b66[m HEAD@{27}: checkout: moving from dqa-dev to main
+[33me3d31cd[m[33m ([m[1;31morigin/dqa-dev[m[33m)[m HEAD@{28}: checkout: moving from main to dqa-dev
+[33mb5a8b66[m HEAD@{29}: commit: fix chon ngay
+[33mcc1b3ac[m HEAD@{30}: checkout: moving from dqa-dev to main
+[33me3d31cd[m[33m ([m[1;31morigin/dqa-dev[m[33m)[m HEAD@{31}: checkout: moving from thinh to dqa-dev
+[33md077629[m[33m ([m[1;31morigin/thinh[m[33m, [m[1;32mthinh[m[33m)[m HEAD@{32}: pull origin thinh: Fast-forward
+[33mb125737[m HEAD@{33}: checkout: moving from dqa-dev to thinh
+[33me3d31cd[m[33m ([m[1;31morigin/dqa-dev[m[33m)[m HEAD@{34}: commit: add storage files
+[33mad90ae0[m HEAD@{35}: commit: update giao dien
+[33mcc1b3ac[m HEAD@{36}: checkout: moving from main to dqa-dev
+[33mcc1b3ac[m HEAD@{37}: pull origin main: Fast-forward
+[33ma8d872d[m HEAD@{38}: merge origin/khiem-dev: Fast-forward
+[33m863e4df[m HEAD@{39}: checkout: moving from main to main
+[33m863e4df[m HEAD@{40}: commit: init project laravel booking
+[33m85fdc04[m HEAD@{41}: Branch: renamed refs/heads/master to refs/heads/main
+[33m85fdc04[m HEAD@{43}: commit (initial): base
