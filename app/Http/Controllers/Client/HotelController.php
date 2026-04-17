@@ -89,16 +89,20 @@ class HotelController extends Controller
                 return redirect()->back()->with('error', 'Không thể đặt ngày trong quá khứ vui lòng thử lại');
             }
 
-            $bookedRoomIds = Booking::active()
-                ->whereIn('room_id', $hotel->rooms->pluck('id'))
-                ->where('check_in', '<', $end->toDateString())
-                ->where('check_out', '>', $start->toDateString())
+            $bookedRoomIds = Booking::query()
+                ->whereNotIn('status', ['cancelled', 'expired'])
+                ->where('expires_at', '>', now()) // 🔥 QUAN TRỌNG
+                ->where('check_in', '<', $end)
+                ->where('check_out', '>', $start)
                 ->pluck('room_id');
 
+            print_r($bookedRoomIds);
             $availableRoomIds = $hotel->rooms
                 ->whereNotIn('id', $bookedRoomIds)
                 ->pluck('id')
                 ->all();
+
+            print_r($availableRoomIds);
         }
 
         $hotels = Hotel::orderBy('created_at', 'desc')->take(12)->get();

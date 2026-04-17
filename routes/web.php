@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\RevenueReportController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Client\CheckoutController;
 use App\Http\Controllers\Client\BookingController;
 use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\HomeController;
@@ -33,6 +34,10 @@ Route::get('/lien-he', [ContactController::class, 'index'])->name('clients.conta
 Route::post('/lien-he', [ContactController::class, 'store'])->name('clients.contacts.store');
 
 Route::middleware('auth')->group(function () {
+    // Tích hợp vn pay
+    Route::post('/vnpay_payment', [CheckoutController::class, 'vnpay_payment']);
+    Route::get('/checkout', [CheckoutController::class, 'return']);
+
     Route::post('/rooms/{room}/availability', [BookingController::class, 'availability'])->name('rooms.availability');
     Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
     Route::resource('bookings', BookingController::class);

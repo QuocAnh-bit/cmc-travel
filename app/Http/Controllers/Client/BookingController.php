@@ -45,6 +45,8 @@ class BookingController extends Controller
         $checkIn = Carbon::parse($validated['check_in'])->startOfDay();
         $checkOut = Carbon::parse($validated['check_out'])->startOfDay();
 
+
+
         if ($room->status !== 'available') {
             return back()
                 ->withInput()
@@ -60,12 +62,15 @@ class BookingController extends Controller
         $nights = max(1, $checkIn->diffInDays($checkOut));
         $nightlyPrice = max(0, $room->price - (int) (($room->price * ($room->discount ?? 0)) / 100));
 
+
+        // tạo boonking
         $booking = Booking::create([
             'user_id' => Auth::id(),
             'room_id' => $room->id,
             'check_in' => $checkIn->toDateString(),
             'check_out' => $checkOut->toDateString(),
             'total_price' => $nightlyPrice * $nights,
+            "expires_at" => now()->addMinute(5),
             'status' => 'pending',
         ]);
 
@@ -79,6 +84,12 @@ class BookingController extends Controller
         abort_unless($booking->user_id === Auth::id(), 403);
 
         $booking->load(['room.hotel']);
+
+        if ($booking->status === 'pending' && $booking->expires_at < now()) {
+            $booking->update([
+                'status' => 'expired'
+            ]);
+        }
         $hotels = Hotel::orderBy('created_at', 'desc')->take(12)->get();
 
         return view('clients.bookings.show', compact('booking', 'hotels'));

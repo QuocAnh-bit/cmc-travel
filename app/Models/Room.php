@@ -19,7 +19,7 @@ class Room extends Model
         'amenities',
         'status',
         'is_featured',
-        
+
     ];
 
     protected $casts = [
@@ -44,16 +44,12 @@ class Room extends Model
 
     public function isAvailableFor($checkIn, $checkOut, $ignoreBookingId = null): bool
     {
-        $query = $this->bookings()
-            ->active()
+        return !$this->bookings()
+            ->whereNotIn('status', ['cancelled', 'expired'])
+            ->where('expires_at', '>', now()) // 🔥 QUAN TRỌNG
             ->where('check_in', '<', $checkOut)
-            ->where('check_out', '>', $checkIn);
-
-        if ($ignoreBookingId) {
-            $query->whereKeyNot($ignoreBookingId);
-        }
-
-        return ! $query->exists();
+            ->where('check_out', '>', $checkIn)
+            ->exists();
     }
 
     /**
