@@ -20,6 +20,33 @@
             --soft-border: #f1f1f1;
         }
 
+        .paid-badge {
+            width: 90px;
+            height: 90px;
+            border: 3px solid red;
+            color: red;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            transform: rotate(-15deg);
+            animation: pop 0.4s ease;
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(0) rotate(-15deg);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1) rotate(-15deg);
+                opacity: 1;
+            }
+        }
+
         .luxury-detail-container {
             font-family: 'Inter', sans-serif;
             background-color: #fcfcfc;
@@ -192,17 +219,20 @@
             <div class="row g-5">
                 <div class="col-lg-8">
                     <div class="card-luxury mb-4">
-                        <div class="alert alert-warning d-flex align-items-center gap-2 shadow-sm p-3 rounded-3">
-                            ⏳ <strong>Thời gian giữ chỗ:</strong>
-                            <span id="countdown" class="badge bg-danger fs-6 px-3 py-2"></span>
-                        </div>
+                        @if($booking->status == 'pending')
+                            <div class="alert alert-warning d-flex align-items-center gap-2 shadow-sm p-3 rounded-3">
+                                ⏳ <strong>Thời gian giữ chỗ:</strong>
+                                <span id="countdown" class="badge bg-danger fs-6 px-3 py-2"></span>
+                            </div>
+                        @endif
                         <div class="position-relative overflow-hidden">
                             <img src="{{ $imageUrl }}" alt="{{ $room?->name }}" class="main-image-luxury">
                             <div class="position-absolute top-0 end-0 m-4">
-                                <span class="status-pill {{ 
-                                                                                                        $booking->status === 'confirmed' ? 'status-confirmed' :
+                                <span
+                                    class="status-pill {{ 
+                                                                                                                                                                                    $booking->status === 'confirmed' ? 'status-confirmed' :
         ($booking->status === 'cancelled' ? 'status-cancelled' : 'status-pending') 
-                                                                                                    }} shadow-sm">
+                                                                                                                                                                                }} shadow-sm">
                                     {{ $booking->status == 'confirmed' ? 'Đã xác nhận' : ($booking->status == 'cancelled' ? 'Đã hủy' : 'Chờ xử lý') }}
                                 </span>
                             </div>
@@ -268,17 +298,30 @@
                         </div>
                         <input type="hidden" id="expires_at"
                             value="{{ $booking->expires_at ? \Carbon\Carbon::parse($booking->expires_at)->format('Y-m-d\TH:i:s') : '' }}">
-                        <form action="{{ url('/vnpay_payment') }}" method="post">
-                            @csrf
-                            <input type="hidden" name="total_vnpay" value="{{ $booking->total_price }}">
-                            <input type="hidden" name="booking_id" value="{{ $booking->id }}">
-                            <input type="hidden" name="booking_status" value="{{ $booking->status }}">
-                            <input type="hidden" name="expires_at" value="{{ $booking->expires_at }}">
 
-                            <button id="payBtn" type="submit" class="btn btn-success check_out " name="redirect">Thanh toán
-                                VNPAY</button>
-                        </form>
 
+
+                        <div class="py-4 text-center border-top d-flex justify-content-center align-items-center">
+                            @if($booking->status == 'pending')
+                                <form action="{{ url('/momo_payment') }}" method="post">
+                                    @csrf
+                                    <input type="hidden" name="total_momo" value="{{ $booking->total_price }}">
+                                    <input type="hidden" name="booking_id" value="{{ $booking->id }}">
+                                    <input type="hidden" name="booking_status" value="{{ $booking->status }}">
+                                    <input type="hidden" name="expires_at" value="{{ $booking->expires_at }}">
+                                    <input type="hidden" name="user_id" value="{{ $booking->user_id }}">
+
+
+                                    <button id="payBtn" type="submit" class="btn btn-success check_out ">Thanh toán
+                                        Momo</button>
+                                </form>
+                            @elseif($booking->status == 'confirmed')
+                                <div class="paid-badge">PAID</div>
+                            @else
+                                <div class="paid-badge">Đã Hủy</div>
+
+                            @endif
+                        </div>
                     </div>
 
                     <div class="card-luxury p-4">

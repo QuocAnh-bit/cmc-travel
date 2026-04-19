@@ -39,4 +39,13 @@ class Booking extends Model
     {
         return $query->whereIn('status', ['pending', 'confirmed']);
     }
+
+
+    public function handle()
+    {
+        Booking::where('status', 'pending')
+            ->where('expires_at', '<', now())
+            ->update(['status' => 'expired']);
+        return 0;
+    }
 }

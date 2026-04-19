@@ -233,10 +233,10 @@
                                             </div>
                                             <div class="text-end">
                                                 <span class="badge-luxury {{ 
-                                                                    $booking->status === 'confirmed' ? 'status-confirmed' :
+                                                                                                                    $booking->status === 'confirmed' ? 'status-confirmed' :
                     ($booking->status === 'cancelled' || $booking->status === 'expired' ? 'status-cancelled' : 'status-pending') 
-                                                                }}">
-                                                    {{ $booking->status == 'expired' ? 'Đã hết hạn' : ($booking->status == 'cancelled' ? 'Đã hủy' : 'Đang chờ') }}
+                                                                                                                }}">
+                                                    {{ $booking->status == 'expired' ? 'Đã hết hạn' : ($booking->status == 'confirmed' ? 'Đã thanh toán' : 'Đã hủy') }}
                                                 </span>
                                                 <div class="price-tag mt-3">{{ number_format($booking->total_price) }}đ</div>
                                             </div>
@@ -266,7 +266,7 @@
                                         </div>
 
                                         <div class="d-flex justify-content-end align-items-center gap-4">
-                                            @if($booking->status !== 'cancelled' && $booking->check_in->isFuture())
+                                            @if($booking->status == "pending")
                                                 <form action="{{ route('bookings.cancel', $booking) }}" method="POST" class="m-0">
                                                     @csrf
                                                     <button type="submit" class="btn-cancel-text border-0 bg-transparent p-0"

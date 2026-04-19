@@ -3,93 +3,144 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
+use App\Models\Order;
 use Illuminate\Http\Request;
 
 class CheckoutController extends Controller
 {
-    public function vnpay_payment(Request $request)
+
+    function execPostRequest($url, $data)
     {
+        $ch = curl_init($url);
 
-        $data = $request->all();
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        if ($data['booking_status'] !== 'pending' || $data['expires_at'] < now()) {
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($data)
+        ]);
+
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+
+
+
+        $result = curl_exec($ch);
+
+        if ($result === false) {
+            dd([
+                'error' => curl_error($ch),
+                'errno' => curl_errno($ch)
+            ]);
+        }
+
+        curl_close($ch);
+        return $result;
+    }
+
+    public function momo_payment(Request $request)
+    {
+        if ($_POST['booking_status'] !== 'pending' || $_POST['expires_at'] < now()) {
             return back()->with('error', 'Đơn đã hết hạn giữ chỗ');
         }
-        $code_cart = $data['booking_id'];
-        $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        $vnp_Returnurl = env("APP_URL") . "checkout";
-        $vnp_TmnCode = "ZQN2509L"; //Mã website tại VNPAY 
-        $vnp_HashSecret = "ZH9HZBZUXE55B6294M3EFGI7GZW86A7E"; //Chuỗi bí mật
+        $endpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
 
-        $vnp_TxnRef = $code_cart; //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này sang VNPAY
-        $vnp_OrderInfo = 'Thanh toán đơn hàng test';
-        $vnp_OrderType = 'billpayment';
-        $vnp_Amount = $data['total_vnpay'] * 100;
-        $vnp_Locale = 'vn';
-        // $vnp_BankCode = 'NCB';
-        $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
+        $partnerCode = 'MOMOBKUN20180529';
+        $accessKey = 'klm05TvNBzhg7h7j';
+        $secretKey = 'at67qH6mk8w5Y1nAyMoYKMWACiEi2bsa';
+        $orderInfo = "Thanh toán qua ATM MoMo";
+        $amount = $_POST['total_momo'];
+        $orderId = 'BK_' . $_POST['booking_id'] . '_' . time();;
+        $redirectUrl = ENV("APP_URL") . "checkout";
+        $ipnUrl = ENV("APP_URL") . "checkout";
+        $extraData = "";
 
-        $inputData = array(
-            "vnp_Version" => "2.1.0",
-            "vnp_TmnCode" => $vnp_TmnCode,
-            "vnp_Amount" => $vnp_Amount,
-            "vnp_Command" => "pay",
-            "vnp_CreateDate" => date('YmdHis'),
-            "vnp_CurrCode" => "VND",
-            "vnp_IpAddr" => $vnp_IpAddr,
-            "vnp_Locale" => $vnp_Locale,
-            "vnp_OrderInfo" => $vnp_OrderInfo,
-            "vnp_OrderType" => $vnp_OrderType,
-            "vnp_ReturnUrl" => $vnp_Returnurl,
-            "vnp_TxnRef" => $vnp_TxnRef,
-
+        $requestId = time() . "";
+        $requestType = "payWithATM";
+        $extraData = $_POST['booking_id'];
+        //before sign HMAC SHA256 signature
+        $rawHash = "accessKey=" . $accessKey . "&amount=" . $amount . "&extraData=" . $extraData . "&ipnUrl=" . $ipnUrl . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo . "&partnerCode=" . $partnerCode . "&redirectUrl=" . $redirectUrl . "&requestId=" . $requestId . "&requestType=" . $requestType;
+        $signature = hash_hmac("sha256", $rawHash, $secretKey);
+        $data = array(
+            'partnerCode' => $partnerCode,
+            'partnerName' => "Test",
+            "storeId" => "MomoTestStore",
+            'requestId' => $requestId,
+            'amount' => $amount,
+            'orderId' => $orderId,
+            'orderInfo' => $orderInfo,
+            'redirectUrl' => $redirectUrl,
+            'ipnUrl' => $ipnUrl,
+            'lang' => 'vi',
+            'extraData' => $extraData,
+            'requestType' => $requestType,
+            'signature' => $signature
         );
+        $result = $this->execPostRequest($endpoint, json_encode($data));
+        $jsonResult = json_decode($result, true);  // decode json
 
-        if (isset($vnp_BankCode) && $vnp_BankCode != "") {
-            $inputData['vnp_BankCode'] = $vnp_BankCode;
-        }
-        if (isset($vnp_Bill_State) && $vnp_Bill_State != "") {
-            $inputData['vnp_Bill_State'] = $vnp_Bill_State;
-        }
+        //Just a example, please check more in there
+        return redirect()->to($jsonResult['payUrl']);
 
-        //var_dump($inputData);
-        ksort($inputData);
-        $query = "";
-        $i = 0;
-        $hashdata = "";
-        foreach ($inputData as $key => $value) {
-            if ($i == 1) {
-                $hashdata .= '&' . urlencode($key) . "=" . urlencode($value);
-            } else {
-                $hashdata .= urlencode($key) . "=" . urlencode($value);
-                $i = 1;
-            }
-            $query .= urlencode($key) . "=" . urlencode($value) . '&';
-        }
-
-        $vnp_Url = $vnp_Url . "?" . $query;
-        if (isset($vnp_HashSecret)) {
-            $vnpSecureHash =   hash_hmac('sha512', $hashdata, $vnp_HashSecret); //  
-            $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
-        }
-        $returnData = array(
-            'code' => '00',
-            'message' => 'success',
-            'data' => $vnp_Url
-        );
-        if (isset($_POST['redirect'])) {
-            header('Location: ' . $vnp_Url);
-
-            die();
-        } else {
-            echo json_encode($returnData);
-        }
+        header('Location: ' . $jsonResult['payUrl']);
     }
+
+
+
 
     public function return(Request $request)
     {
         $data = $request->all();
 
-        dd($data);
+        $bookingId = $data['extraData'] ?? null;
+
+        print_r($data);
+        $booking = Booking::find($bookingId);
+
+        if (!$booking) {
+            return back()->with('error', 'Không tìm thấy booking');
+        }
+
+        // 🚨 nếu đã confirmed thì thôi
+        if ($booking->booking_status === 'confirmed') {
+            return redirect()->route('checkout')->with('success', 'Đã thanh toán rồi');
+        }
+
+
+        // ===== SUCCESS =====
+        if ($data['resultCode'] == 0) {
+
+            // tránh tạo trùng order
+            $existingOrder = Order::where('id', $data['orderId'])->first();
+
+            if (!$existingOrder) {
+                Order::create([
+                    'user_id' => $booking->user_id,
+                    'booking_id' => $bookingId,
+                    'order_id' => $data['orderId'],
+                    'amount' => $data['amount'],
+                    'status' => 'paid',
+                    'transaction_id' => $data['transId'],
+                    'payment_method' => 'momo',
+                    'paid_at' => now(),
+                ]);
+            }
+
+            $booking->update([
+                'status' => 'confirmed'
+            ]);
+
+            return  redirect()->to('bookings/' . $bookingId)->with('success', 'Thanh toán thành công');
+        }
+
+        // ===== FAIL =====
+        $booking->update([
+            'status' => 'cancelled'
+        ]);
+
+        return redirect()->to('bookings/' . $bookingId)->with('error', 'Thanh toán thất bại');
     }
 }

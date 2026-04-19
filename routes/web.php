@@ -35,7 +35,7 @@ Route::post('/lien-he', [ContactController::class, 'store'])->name('clients.cont
 
 Route::middleware('auth')->group(function () {
     // Tích hợp vn pay
-    Route::post('/vnpay_payment', [CheckoutController::class, 'vnpay_payment']);
+    Route::post('/momo_payment', [CheckoutController::class, 'momo_payment']);
     Route::get('/checkout', [CheckoutController::class, 'return']);
 
     Route::post('/rooms/{room}/availability', [BookingController::class, 'availability'])->name('rooms.availability');
